@@ -4,14 +4,8 @@
 This Flutter project is an accounts management application designed for Android and iOS devices. It allows users to track their income and expenses, providing a convenient way to manage their personal finances.
 
 ---
-<div style="display: flex; justify-content: center;">
-    <img src="example_images/Example_1.jpg" alt="Image 1" style="margin-right: 10px; width: 200px; height: auto;">
-    <img src="example_images/Example_2.jpg" alt="Image 2" style="margin-right: 10px; width: 200px; height: auto;">
-    <img src="example_images/Example_3.jpg" alt="Image3" style="margin-right: 10px; width: 200px; height: auto;">
-    <img src="example_images/Example_4.jpg" alt="Image 3" style="margin-right: 10px; width: 200px; height: auto;">
-    <img src="example_images/Example_5.jpg" alt="Image 3" style="margin-right: 10px; width: 200px; height: auto;">
-    <img src="example_images/Example_6.jpg" alt="Image 3" style="width: 200px; height: auto;">
-</div>
+
+![](example_images\example_1.jpg)
 
 ---
 
