@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:my_app/services/database_service.dart';
+import 'package:my_app/views/dialoges/create_expense_dialog.dart';
+import 'package:my_app/views/dialoges/create_income_dialog.dart';
 
 import 'package:my_app/views/widgets/tab_list_view_widget.dart';
-import 'package:my_app/utilities/get_state.dart';
+import 'package:my_app/utilities/controllers/state_controller.dart';
 
 class TabbarWidget extends StatefulWidget {
   const TabbarWidget({super.key});
@@ -15,12 +16,11 @@ class TabbarWidget extends StatefulWidget {
 class _TabbarWidgetState extends State<TabbarWidget>
     with TickerProviderStateMixin {
   late final TabController _tabController;
-  late final DatabaseService _databaseService;
 
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
-    _databaseService = DatabaseService();
+    StateController().addStateFunction(setState);
     super.initState();
   }
 
@@ -38,7 +38,7 @@ class _TabbarWidgetState extends State<TabbarWidget>
         // Upper Margin
         const SizedBox(height: 12),
 
-        // Uppwe Nauch of Sliding Pannel
+        // Upper Nauch of Sliding Pannel
         _uppernauchwidget(context),
 
         // Bottom Margin of Upper Nauch
@@ -58,47 +58,16 @@ class _TabbarWidgetState extends State<TabbarWidget>
         ),
 
         // Floation Add Node Button
-        Padding(
-          padding: const EdgeInsets.only(
-            right: 18,
-            top: 18,
-            bottom: 12,
-          ),
-          child: FloatingActionButton(
-            onPressed: () {
-              if (_tabController.index == 0) {
-                _databaseService.createIncomeNode(
-                    amount: 200, description: 'To ONE');
-              } else if (_tabController.index == 1) {
-                _databaseService.createExpenseNode(
-                    amount: 200, description: 'TO Two');
-              }
-              //_databaseService.delete();
-              setState(() {});
-              BalanceState().getState(() {});
-            },
-            child: const Icon(
-              Icons.add_rounded,
-              size: 35,
-            ),
-          ),
-        ),
-
+        _floatingActionButton(context),
         // TabBar View Widget Associated With Each Tab
         Expanded(
           child: TabBarView(
             controller: _tabController,
-            children: <Widget>[
+            children: const <Widget>[
               // Income Tab
-              TabListView(
-                getListFunction: _databaseService.getIncome,
-                status: 1,
-              ),
+              TabListView(status: 1),
               // Expenditure Tab
-              TabListView(
-                getListFunction: _databaseService.getExpenses,
-                status: 0,
-              ),
+              TabListView(status: 0),
             ],
           ),
         ),
@@ -113,6 +82,33 @@ class _TabbarWidgetState extends State<TabbarWidget>
           decoration: BoxDecoration(
               color: Colors.grey.shade300,
               borderRadius: BorderRadius.circular(12)),
+        ),
+      );
+      
+  Widget _floatingActionButton(BuildContext context) => Padding(
+        padding: const EdgeInsets.only(
+          right: 18,
+          top: 18,
+          bottom: 12,
+        ),
+        child: FloatingActionButton(
+          onPressed: () {
+            if (_tabController.index == 0) {
+              showDialog(
+                context: context,
+                builder: (context) => const CreateIncomeDialog(),
+              );
+            } else if (_tabController.index == 1) {
+              showDialog(
+                context: context,
+                builder: (context) => const CreateExpenseDialog(),
+              );
+            }
+          },
+          child: const Icon(
+            Icons.add_rounded,
+            size: 35,
+          ),
         ),
       );
 }
