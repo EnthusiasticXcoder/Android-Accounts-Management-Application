@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/constants/crud_constants.dart';
+import 'package:my_app/services/database_exceptions.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -24,9 +26,12 @@ class DatabaseService {
 
   int get getTotalExpense => _totalExpense;
 
-  List get getBalance => (_totalIncome > _totalExpense)
-      ? [(_totalIncome - _totalExpense), Colors.greenAccent]
-      : [(_totalExpense - _totalIncome), Colors.redAccent];
+  int get getBalance => (_totalIncome >= _totalExpense)
+      ? (_totalIncome - _totalExpense)
+      : (_totalExpense - _totalIncome);
+
+  Color get diffColor =>
+      (_totalIncome >= _totalExpense) ? Colors.greenAccent : Colors.red;
 
   Future<List<int>> _getTotalIncomeExpense() async {
     await _ensureDbIsOpen();
@@ -64,10 +69,6 @@ class DatabaseService {
   }) async =>
       await _createNode(amount, description, 1);
 
-  Future<List<Map<String, Object?>>> getExpenses() async => await _getNodes(0);
-
-  Future<List<Map<String, Object?>>> getIncome() async => await _getNodes(1);
-
   Future<void> _createNode(
     int amount,
     String description,
@@ -98,7 +99,7 @@ class DatabaseService {
     );
   }
 
-  Future<List<Map<String, Object?>>> _getNodes(int args) async {
+  Future<List<Map<String, Object?>>> getNodes(int args) async {
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
 
@@ -107,6 +108,7 @@ class DatabaseService {
       where: 'Status = ?',
       whereArgs: [args],
     );
+
     return nodes;
   }
 
@@ -157,32 +159,3 @@ class DatabaseService {
     }
   }
 }
-
-// Constants
-const dbName = 'accounts.db';
-const tableName = 'Accounts';
-const amountcolumn = 'Amount';
-const descridecolumn = 'Description';
-const daycolumn = 'Date';
-const monthcolumn = 'Month';
-const yearcolumn = 'Year';
-const hourcolumn = 'Hour';
-const minutescolumn = 'Minutes';
-const statuscolumn = 'Status';
-const createTable = '''CREATE TABLE IF NOT EXISTS "Accounts" (
-	"Amount"	INTEGER,
-	"Description"	TEXT,
-	"Date"	INTEGER,
-  "Month"	INTEGER,
-  "Year"	INTEGER,
-  "Hour"	INTEGER,
-  "Minutes"	INTEGER,
-	"Status"	INTEGER
-);''';
-
-// Exceptions
-class UnableToGetDocumentsDirectory implements Exception {}
-
-class DatabaseIsNotOpen implements Exception {}
-
-class DatabaseAlreadyOpenException implements Exception {}
