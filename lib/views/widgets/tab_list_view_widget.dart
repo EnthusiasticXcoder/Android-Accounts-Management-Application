@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/constants/crud_constants.dart';
+import 'package:my_app/helpers/loading/loading_tile.dart';
 
 import 'package:my_app/services/database_service.dart';
-import 'package:my_app/utilities/vertical_controller.dart';
-
-
-typedef FutureListFunction = Future<List<Map<String, Object?>>> Function();
+import 'package:my_app/utilities/controllers/vertical_controller.dart';
+import 'package:my_app/views/dialoges/display_more_dialog.dart';
 
 class TabListView extends StatelessWidget {
   final int status;
-  final FutureListFunction getListFunction;
 
   const TabListView({
     super.key,
     required this.status,
-    required this.getListFunction,
   });
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: getListFunction(),
+      future: DatabaseService().getNodes(status),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
           case ConnectionState.done:
@@ -30,6 +28,9 @@ class TabListView extends StatelessWidget {
               itemBuilder: (context, index) {
                 int value = listData[index][amountcolumn] as int;
                 String description = listData[index][descridecolumn] as String;
+                String dateTime =
+                    '${listData[index][daycolumn]}/${listData[index][monthcolumn]}/${listData[index][yearcolumn]}\t${listData[index][hourcolumn]}:${listData[index][minutescolumn]}'
+                    '';
                 return Card(
                   margin: const EdgeInsets.symmetric(
                     horizontal: 10,
@@ -38,8 +39,10 @@ class TabListView extends StatelessWidget {
                   child: ListTile(
                     // Leading Icon
                     leading: Icon(
-                      status == 1 ? incomeIcon : expenseIcon,
-                      color: status == 1 ? incomeColor : expenseColor,
+                      status == 1
+                          ? Icons.arrow_downward_rounded
+                          : Icons.arrow_upward_rounded,
+                      color: status == 1 ? Colors.green : Colors.red,
                       size: 35,
                     ),
 
@@ -47,14 +50,15 @@ class TabListView extends StatelessWidget {
                     title: Text(
                       description,
                       style: const TextStyle(
-                        fontSize: 20,
+                        overflow: TextOverflow.ellipsis,
+                        fontSize: 18,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
 
                     // Date and Time
                     subtitle: Text(
-                      description,
+                      dateTime,
                       style: const TextStyle(
                         color: Colors.black,
                         fontSize: 12,
@@ -64,24 +68,34 @@ class TabListView extends StatelessWidget {
                     trailing: Text(
                       '₹$value',
                       style: TextStyle(
-                        color: status == 1 ? incomeColor : expenseColor,
+                        color: status == 1 ? Colors.green : Colors.red,
                         fontSize: 22,
                       ),
                     ),
+
+                    // Discription overview
+                    onLongPress: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => DisplayMoreDialog(
+                          amount: value.toString(),
+                          dateTime: dateTime,
+                          description: description,
+                          statusColor:
+                              (status == 1) ? Colors.green : Colors.red,
+                        ),
+                      );
+                    },
                   ),
                 );
               },
             );
           default:
-            return const CircularProgressIndicator();
+            return ListView.builder(
+                itemCount: 4,
+                itemBuilder: (context, index) => LoadingTile(status: status));
         }
       },
     );
   }
 }
-
-
-const incomeIcon = Icons.arrow_downward_rounded;
-const expenseIcon = Icons.arrow_upward_rounded;
-const incomeColor = Colors.green;
-const expenseColor = Colors.red;
