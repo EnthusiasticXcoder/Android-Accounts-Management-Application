@@ -5,7 +5,11 @@ This Flutter project is an accounts management application designed for Android 
 
 ---
 
-![](example_images\example_1.jpg)
+<p float="left">
+   <img src="example_images/example_1.jpg" width="260" />
+   <img src="example_images/example_2.jpg" width="260" /> 
+   <img src="example_images/example_6.jpg" width="260" />
+</p>
 
 ---
 
@@ -27,6 +31,17 @@ This Flutter project is an accounts management application designed for Android 
    - Generate reports based on income and expenses
    - Analyze spending patterns and trends
    - Set budget goals and track progress
+
+
+---
+
+<p float="left">
+   <img src="example_images/example_3.jpg" width="260" /> 
+   <img src="example_images/example_4.jpg" width="260" /> 
+   <img src="example_images/example_5.jpg" width="260" /> 
+</p>
+
+---
 
 ## Installation
 1. Ensure you have Flutter SDK installed on your system. If not, follow the official Flutter installation guide: [Flutter Installation Guide](https://flutter.dev/docs/get-started/install)
