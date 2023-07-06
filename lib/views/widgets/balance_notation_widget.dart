@@ -99,10 +99,9 @@ class _BalanceNotationWidgetState extends State<BalanceNotationWidget> {
               // margin
               const SizedBox(width: 2),
               AnimatedDigitWidget(
-                prefix: '₹',
-                value: amount,
-                textStyle: TextStyle(color: color, height: 0),
-              )
+                  prefix: '₹',
+                  value: amount,
+                  textStyle: TextStyle(color: color, height: 0)),
             ],
           ),
         ),

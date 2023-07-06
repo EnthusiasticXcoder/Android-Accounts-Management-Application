@@ -37,9 +37,16 @@ class _MyHomeViewState extends State<MyHomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.blue.shade500,
       body: Stack(
         children: <Widget>[
+          Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [
+              const Color.fromARGB(255, 0, 174, 255),
+              Colors.lightBlue.shade400,
+              Colors.blue.shade500,
+            ])),
+          ),
           // Header Widget
           const Headwidget(),
 
