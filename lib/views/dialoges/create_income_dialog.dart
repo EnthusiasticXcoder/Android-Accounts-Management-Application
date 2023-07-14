@@ -78,20 +78,19 @@ class _CreateIncomeDialogState extends State<CreateIncomeDialog> {
           left: 22.0, right: 22.0, top: 25.0, bottom: 8.0),
       actions: [
         TextButton(
-            onPressed: () {
+            onPressed: () async {
+              Navigator.of(context).pop();
               if (_amountController.text.isNotEmpty &&
                   _descriptionController.text.isNotEmpty) {
-                _databaseService.createIncomeNode(
+                await _databaseService.createIncomeNode(
                   amount: int.tryParse(_amountController.text),
                   description: _descriptionController.text.toString(),
                 );
+                StateController().setStates();
               }
-              Navigator.of(context).pop();
-              StateController().setStates();
             },
             child: const Text("Done"))
       ],
     );
   }
 }
-

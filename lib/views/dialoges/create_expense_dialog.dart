@@ -37,7 +37,6 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
         'Expense',
         style: TextStyle(color: Colors.red),
       ),
-      
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -79,20 +78,19 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
           left: 22.0, right: 22.0, top: 25.0, bottom: 8.0),
       actions: [
         TextButton(
-            onPressed: () {
+            onPressed: (){
+              Navigator.of(context).pop();
               if (_amountController.text.isNotEmpty &&
                   _descriptionController.text.isNotEmpty) {
                 _databaseService.createExpenseNode(
                   amount: int.tryParse(_amountController.text),
                   description: _descriptionController.text.toString(),
                 );
+                StateController().setStates();
               }
-              Navigator.of(context).pop();
-              StateController().setStates();
             },
             child: const Text("Done"))
       ],
     );
   }
 }
-

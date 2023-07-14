@@ -14,14 +14,6 @@ class DatabaseService {
   DatabaseService._sharedInstance();
   factory DatabaseService() => _service;
 
-  void delete() async {
-    await _ensureDbIsOpen();
-    final db = _getDatabaseOrThrow();
-    db.delete(tableName);
-    _totalIncome = 0;
-    _totalExpense = 0;
-  }
-
   int get gettotalIncome => _totalIncome;
 
   int get getTotalExpense => _totalExpense;
