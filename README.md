@@ -1,7 +1,5 @@
 # Flutter Accounts Management Application
-
-## Description
-This Flutter project is an accounts management application designed for Android and iOS devices. It allows users to track their income and expenses, providing a convenient way to manage their personal finances.
+This is a cross-platform Flutter project designed for Android and iOS devices. The Accounts Management Application provides users with an intuitive way to track their income and expenses, offering a convenient solution for managing personal finances.
 
 ---
 
