@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:my_app/constants/crud_constants.dart';
 import 'package:my_app/services/database_exceptions.dart';
+import 'package:my_app/services/database_node.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -10,8 +13,14 @@ class DatabaseService {
 
   int _totalIncome = 0, _totalExpense = 0;
 
+  List<DatabaseNote> _nodes = [];
+
+  late final StreamController<DatabaseNote> _nodesStreamController;
+
   static final DatabaseService _service = DatabaseService._sharedInstance();
-  DatabaseService._sharedInstance();
+  DatabaseService._sharedInstance() {
+    _nodesStreamController = StreamController<DatabaseNote>.broadcast();
+  }
   factory DatabaseService() => _service;
 
   int get gettotalIncome => _totalIncome;
@@ -24,6 +33,11 @@ class DatabaseService {
 
   Color get diffColor =>
       (_totalIncome >= _totalExpense) ? Colors.greenAccent : Colors.red;
+
+  List<DatabaseNote> getNodes(column, value) =>
+      _nodes.where((node) => node.isincome == value).toList();
+
+  Stream<DatabaseNote> getstream() => _nodesStreamController.stream;
 
   Future<List<int>> _getTotalIncomeExpense() async {
     await _ensureDbIsOpen();
@@ -70,38 +84,43 @@ class DatabaseService {
     final db = _getDatabaseOrThrow();
     DateTime now = DateTime.now();
 
+    final values = {
+      amountcolumn: amount,
+      descridecolumn: description,
+      daycolumn: (now.day).toInt(),
+      monthcolumn: (now.month).toInt(),
+      yearcolumn: (now.year).toInt(),
+      hourcolumn: (now.hour).toInt(),
+      minutescolumn: (now.minute).toInt(),
+      statuscolumn: status,
+    };
     if (status == 0) {
       _totalExpense += amount;
     } else {
       _totalIncome += amount;
     }
-
-    await db.insert(
-      tableName,
-      {
-        amountcolumn: amount,
-        descridecolumn: description,
-        daycolumn: (now.day).toInt(),
-        monthcolumn: (now.month).toInt(),
-        yearcolumn: (now.year).toInt(),
-        hourcolumn: (now.hour).toInt(),
-        minutescolumn: (now.minute).toInt(),
-        statuscolumn: status,
-      },
-    );
+    // adding nodes to local buffer
+    final node = DatabaseNote.fromRow(values);
+    _nodes.add(node);
+    _nodesStreamController.add(node);
+    // inserting nodes to database
+    await db.insert(tableName, values);
   }
 
-  Future<List<Map<String, Object?>>> getNodes(int args) async {
+  Future<void> _setvariables() async {
+    final totalsum = await _getTotalIncomeExpense();
+    _totalIncome = totalsum[0];
+    _totalExpense = totalsum[1];
+    _nodes = await getallNodes();
+    _nodesStreamController.add(_nodes[0]);
+  }
+
+  Future<List<DatabaseNote>> getallNodes() async {
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
 
-    final nodes = await db.query(
-      tableName,
-      where: 'Status = ?',
-      whereArgs: [args],
-    );
-
-    return nodes;
+    final nodes = await db.query(tableName);
+    return nodes.map((map) => DatabaseNote.fromRow(map)).toList();
   }
 
   Database _getDatabaseOrThrow() {
@@ -143,9 +162,7 @@ class DatabaseService {
       // create the user table
       await db.execute(createTable);
       // Setting Values
-      final totalsum = await _getTotalIncomeExpense();
-      _totalIncome = totalsum[0];
-      _totalExpense = totalsum[1];
+      await _setvariables();
     } on MissingPlatformDirectoryException {
       throw UnableToGetDocumentsDirectory();
     }
