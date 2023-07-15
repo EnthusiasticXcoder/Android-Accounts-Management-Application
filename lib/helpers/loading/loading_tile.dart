@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class LoadingTile extends StatelessWidget {
-  final int status;
-  const LoadingTile({super.key, required this.status});
+  final bool isincome;
+  const LoadingTile({super.key, required this.isincome});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class LoadingTile extends StatelessWidget {
           height: 35,
           width: 35,
           decoration: BoxDecoration(
-              color: status == 1
+              color: isincome 
                   ? Colors.green.withAlpha(160)
                   : Colors.red.withAlpha(160),
               shape: BoxShape.circle),
@@ -37,7 +37,7 @@ class LoadingTile extends StatelessWidget {
             height: 35,
             width: 60,
             decoration: BoxDecoration(
-                color: status == 1
+                color: isincome
                     ? Colors.green.withAlpha(160)
                     : Colors.red.withAlpha(160),
                 borderRadius: BorderRadius.circular(8))),
