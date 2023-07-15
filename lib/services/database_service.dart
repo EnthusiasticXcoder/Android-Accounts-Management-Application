@@ -34,8 +34,19 @@ class DatabaseService {
   Color get diffColor =>
       (_totalIncome >= _totalExpense) ? Colors.greenAccent : Colors.red;
 
-  List<DatabaseNote> getNodes(column, value) =>
-      _nodes.where((node) => node.isincome == value).toList();
+  List<DatabaseNote> getNodes(DateTime? filter, value) {
+    if (filter == null) {
+      return _nodes.reversed.where((node) => node.isincome == value).toList();
+    } else {
+      return _nodes
+          .where((node) =>
+              node.isincome == value &&
+              node.date >= filter.day &&
+              node.month == filter.month &&
+              node.year == filter.year)
+          .toList();
+    }
+  }
 
   Stream<DatabaseNote> getstream() => _nodesStreamController.stream;
 

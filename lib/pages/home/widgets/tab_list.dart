@@ -1,13 +1,14 @@
 part of 'tab_bar.dart';
 
-
 class TabListView extends StatelessWidget {
   final bool isIncome;
+  final DateTime? filter;
   late final DatabaseService _service;
 
   TabListView({
     super.key,
     required this.isIncome,
+    required this.filter,
   }) {
     _service = DatabaseService();
   }
@@ -20,7 +21,7 @@ class TabListView extends StatelessWidget {
         switch (snapshot.connectionState) {
           case ConnectionState.waiting:
           case ConnectionState.active:
-            final nodes = _service.getNodes(statuscolumn, isIncome);
+            final nodes = _service.getNodes(filter, isIncome);
             return ListView.builder(
               controller: VerticalController().getcontroller,
               itemCount: nodes.length,
@@ -30,7 +31,7 @@ class TabListView extends StatelessWidget {
                 String description = node.description;
                 String dateTime =
                     '${node.date}/${node.month}/${node.year} \t ${node.hour}:${node.minutes}';
-                    
+
                 return NodeTile(
                   isIncome: isIncome,
                   description: description,

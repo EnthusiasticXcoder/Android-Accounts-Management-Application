@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:my_app/utilities/controllers/state_controller.dart';
 
 import 'package:my_app/pages/home/view/display.dart';
-import 'package:my_app/constants/crud_constants.dart';
 import 'package:my_app/helpers/loading/loading_tile.dart';
 
 import 'package:my_app/services/database_service.dart';
@@ -12,7 +11,6 @@ part 'tab_list.dart';
 part 'node_tile.dart';
 part '../view/expense.dart';
 part '../view/income.dart';
-
 
 class TabbarWidget extends StatefulWidget {
   const TabbarWidget({super.key});
@@ -24,6 +22,7 @@ class TabbarWidget extends StatefulWidget {
 class _TabbarWidgetState extends State<TabbarWidget>
     with TickerProviderStateMixin {
   late final TabController _tabController;
+  DateTime? _filter;
 
   @override
   void initState() {
@@ -68,12 +67,67 @@ class _TabbarWidgetState extends State<TabbarWidget>
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            FloatingActionButton(
-              onPressed: () => setState(() {}),
+            // filtur by date
+            InkWell(
+              onTap: () async {
+                final date = await showDatePicker(
+                  context: context,
+                  initialDate: (_filter == null) ? DateTime.now() : _filter!,
+                  firstDate: DateTime(2002),
+                  lastDate: DateTime.now(),
+                );
+                if (date != null) {
+                  setState(() {
+                    _filter = date;
+                  });
+                }
+              },
+              child: Hero(
+                tag: 'filter',
+                child: Container(
+                  margin: const EdgeInsets.only(left: 15.0),
+                  width: 200.0,
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(129, 227, 242, 253),
+                    borderRadius: BorderRadius.circular(16.0),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black12,
+                        spreadRadius: -1.0,
+                        blurRadius: 10.0,
+                        offset: Offset(0.0, 10.0),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // margin
+                      const SizedBox(),
+                      // textfield to show filter
+                      Text(
+                        (_filter == null)
+                            ? 'No Filter'
+                            : 'Date : ${_filter!.day}/${_filter!.month}/${_filter!.year}',
+                        style: const TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                      // clear filter button
+                      IconButton(
+                          onPressed: () async {
+                            setState(() {
+                              _filter = null;
+                            });
+                          },
+                          icon: Icon(
+                            Icons.filter_alt_off_rounded,
+                            color: Colors.blue.shade500,
+                          )),
+                    ],
+                  ),
+                ),
+              ),
             ),
-            FloatingActionButton(
-              onPressed: () => setState(() {}),
-            ),
+            // button to add node
             _floatingActionButton(context),
           ],
         ),
@@ -84,9 +138,9 @@ class _TabbarWidgetState extends State<TabbarWidget>
             controller: _tabController,
             children: <Widget>[
               // Income Tab
-              TabListView(isIncome: true),
+              TabListView(filter: _filter, isIncome: true),
               // Expenditure Tab
-              TabListView(isIncome: false),
+              TabListView(filter: _filter, isIncome: false),
             ],
           ),
         ),
