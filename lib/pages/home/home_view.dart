@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/views/widgets/head_bar_widget.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import 'package:my_app/utilities/controllers/vertical_controller.dart';
-import 'package:my_app/views/widgets/balance_notation_widget.dart';
-import 'package:my_app/views/widgets/tab_bar_widget.dart';
+
+import 'package:my_app/pages/home/widgets/widgets.dart';
 
 import 'package:my_app/services/database_service.dart';
-
 import 'package:my_app/utilities/generics/get_argument.dart';
 
 class MyHomeView extends StatefulWidget {

@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:my_app/services/database_service.dart';
-import 'package:my_app/utilities/controllers/state_controller.dart';
+part of '../widgets/tab_bar.dart';
 
 class CreateExpenseDialog extends StatefulWidget {
   const CreateExpenseDialog({super.key});
