@@ -1,35 +1,21 @@
-import 'package:animated_digit/animated_digit.dart';
 import 'package:flutter/material.dart';
+import 'package:animated_digit/animated_digit.dart';
 import 'package:my_app/constants/crud_constants.dart';
 
-import 'package:my_app/services/database_service.dart';
-import 'package:my_app/utilities/controllers/state_controller.dart';
+class BalanceNotationWidget extends StatelessWidget {
+  final int income, expense, balance;
 
-class BalanceNotationWidget extends StatefulWidget {
-  const BalanceNotationWidget({super.key});
-
-  @override
-  State<BalanceNotationWidget> createState() => _BalanceNotationWidgetState();
-}
-
-class _BalanceNotationWidgetState extends State<BalanceNotationWidget> {
-  late final DatabaseService _databaseService;
-
-  @override
-  void initState() {
-    _databaseService = DatabaseService();
-    StateController().addStateFunction(setState);
-    super.initState();
-  }
+  const BalanceNotationWidget(
+      {super.key,
+      required this.income,
+      required this.expense,
+      required this.balance});
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        // Upper Margin
-        const SizedBox(),
+      children: [
+        const SizedBox(height: 8.0),
         // Total Income and expense widgets
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -37,7 +23,7 @@ class _BalanceNotationWidgetState extends State<BalanceNotationWidget> {
             // Income Indecator
             _balanceCard(
               context,
-              amount: _databaseService.gettotalIncome,
+              amount: income,
               icon: Icons.arrow_downward_rounded,
               color: Colors.green,
             ),
@@ -45,7 +31,7 @@ class _BalanceNotationWidgetState extends State<BalanceNotationWidget> {
             // Expense Indecator
             _balanceCard(
               context,
-              amount: _databaseService.getTotalExpense,
+              amount: expense,
               icon: Icons.arrow_upward_rounded,
               color: Colors.red,
             ),
@@ -54,10 +40,13 @@ class _BalanceNotationWidgetState extends State<BalanceNotationWidget> {
         // Balance Field
         AnimatedDigitWidget(
           prefix: '₹',
-          value: _databaseService.getBalance,
+          value: (income > expense) ? balance : balance * (-1),
           enableSeparator: true,
+          valueColors: [
+            ValueColor(condition: () => balance < 0, color: Colors.red)
+          ],
           textStyle: TextStyle(
-            color: _databaseService.diffColor,
+            color: Colors.green.shade800,
             fontSize: 76,
             fontWeight: FontWeight.bold,
             height: 0,
@@ -77,8 +66,7 @@ class _BalanceNotationWidgetState extends State<BalanceNotationWidget> {
           ),
         ),
 
-        // Lower Margin
-        const SizedBox(height: 300),
+        const SizedBox(height: 8.0),
       ],
     );
   }

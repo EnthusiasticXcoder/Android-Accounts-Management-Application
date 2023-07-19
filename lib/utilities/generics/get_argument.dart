@@ -9,7 +9,7 @@ extension GetArgument on BuildContext {
 
   double getmaxheight() {
     final mediaquery = MediaQuery.of(this);
-    final args = mediaquery.size.height * 0.7;
+    final args = mediaquery.size.height * 0.68;
     return args;
   }
 
