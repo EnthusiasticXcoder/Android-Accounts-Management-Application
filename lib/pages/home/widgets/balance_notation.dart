@@ -43,7 +43,14 @@ class BalanceNotationWidget extends StatelessWidget {
           value: (income > expense) ? balance : balance * (-1),
           enableSeparator: true,
           valueColors: [
-            ValueColor(condition: () => balance < 0, color: Colors.red)
+            ValueColor(
+              condition: () => balance < 0,
+              color: Colors.red,
+            ),
+            ValueColor(
+              condition: () => balance >= 0,
+              color: Colors.green,
+            )
           ],
           textStyle: TextStyle(
             color: Colors.green.shade800,
