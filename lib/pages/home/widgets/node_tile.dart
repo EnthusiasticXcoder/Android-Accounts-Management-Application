@@ -1,17 +1,21 @@
 part of 'tab_bar.dart';
 
+
+typedef NodeCallback = void Function();
+
 class NodeTile extends StatelessWidget {
   final bool isIncome;
   final String description;
   final String dateTime;
   final int amount;
+  final NodeCallback onDelete;
 
   const NodeTile({
     super.key,
     required this.isIncome,
     required this.description,
     required this.dateTime,
-    required this.amount,
+    required this.amount, required this.onDelete,
   });
 
   @override
@@ -65,6 +69,7 @@ class NodeTile extends StatelessWidget {
               dateTime: dateTime,
               description: description,
               statusColor: isIncome ? Colors.green : Colors.red,
+              onDelete: onDelete,
             ),
           );
         },

@@ -88,6 +88,25 @@ class DatabaseService {
 
   Stream<DatabaseNote> getstream() => _nodesStreamController.stream;
 
+  Future<void> deleteNode(DatabaseNote node) async {
+    await _ensureDbIsOpen();
+    final db = _getDatabaseOrThrow();
+
+    final numberofdelete = await db.delete(
+      tableName,
+      where: '$idcolumn = ? ',
+      whereArgs: [node.id],
+    );
+
+    if (numberofdelete != 1) {
+      throw UnableToDeleteException();
+    }
+    _nodes.removeWhere(
+      (element) => element.id == node.id,
+    );
+    _nodesStreamController.add(node);
+  }
+
   Future<void> createNode({
     required int amount,
     required String description,
@@ -107,17 +126,21 @@ class DatabaseService {
       minutescolumn: (now.minute).toInt(),
       isIncomecolumn: isIncome,
     };
+    // inserting nodes to database
+    final id = await db.insert(tableName, values);
+    values.addAll({idcolumn: id});
+
     // adding nodes to local buffer
     final node = DatabaseNote.fromRow(values);
     _nodes.add(node);
     _nodesStreamController.add(node);
-    // inserting nodes to database
-    await db.insert(tableName, values);
   }
 
   Future<void> _catchallNodes() async {
     _nodes = await _getallNodes();
-    _nodesStreamController.add(_nodes[0]);
+    if (_nodes.isNotEmpty) {
+      _nodesStreamController.add(_nodes[0]);
+    }
   }
 
   Future<List<DatabaseNote>> _getallNodes() async {

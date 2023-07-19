@@ -1,29 +1,30 @@
 import 'package:flutter/material.dart';
 
+typedef NodeCallback = void Function();
+
 class DisplayMoreDialog extends StatelessWidget {
   final String amount, dateTime, description;
   final Color statusColor;
+  final NodeCallback onDelete;
 
-  const DisplayMoreDialog(
-      {required this.amount,
-      required this.dateTime,
-      required this.description,
-      required this.statusColor,
-      super.key});
+  const DisplayMoreDialog({
+    required this.amount,
+    required this.dateTime,
+    required this.description,
+    required this.statusColor,
+    required this.onDelete,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       icon: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconButton(
-              onPressed: () => Navigator.of(context).pop(),
-              icon: const Icon(
-                Icons.arrow_back,
-                color: Colors.black87,
-                size: 27,
-              )),
+        children: <Widget>[
+          BackButton(
+            onPressed: () => Navigator.of(context).pop(),
+          ),
           const SizedBox(),
         ],
       ),
@@ -58,6 +59,17 @@ class DisplayMoreDialog extends StatelessWidget {
           fontSize: 15,
         ),
       ),
+      actions: <Widget>[
+        TextButton(
+            onPressed: () {
+              onDelete();
+              Navigator.of(context).pop();
+            },
+            child: const Text(
+              'Delete',
+              style: TextStyle(color: Colors.red, fontSize: 16),
+            ))
+      ],
     );
   }
 }

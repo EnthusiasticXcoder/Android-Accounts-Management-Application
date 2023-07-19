@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:my_app/pages/home/view/display.dart';
 import 'package:my_app/helpers/loading/loading_tile.dart';
+import 'package:my_app/services/database_exceptions.dart';
 
 import 'package:my_app/services/database_service.dart';
 

@@ -9,7 +9,8 @@ class TabListView extends StatelessWidget {
   TabListView({
     super.key,
     required this.isIncome,
-    required this.filter, required this.controller,
+    required this.filter,
+    required this.controller,
   }) {
     _service = DatabaseService();
   }
@@ -38,6 +39,13 @@ class TabListView extends StatelessWidget {
                   description: description,
                   dateTime: dateTime,
                   amount: amount,
+                  onDelete: () async {
+                    try {
+                      await _service.deleteNode(node);
+                    } on UnableToDeleteException {
+                      // message to display
+                    }
+                  },
                 );
               },
             );

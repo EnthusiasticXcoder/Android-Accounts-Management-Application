@@ -3,6 +3,7 @@ import 'package:my_app/constants/crud_constants.dart';
 
 @immutable
 class DatabaseNote {
+  final int id;
   final int amount;
   final String description;
   final int date;
@@ -13,7 +14,8 @@ class DatabaseNote {
   final bool isincome;
 
   const DatabaseNote(
-      {required this.amount,
+      {required this.id,
+      required this.amount,
       required this.description,
       required this.date,
       required this.month,
@@ -23,7 +25,8 @@ class DatabaseNote {
       required this.isincome});
 
   DatabaseNote.fromRow(Map<String, Object?> map)
-      : amount = map[amountcolumn] as int,
+      : id = map[idcolumn] as int,
+        amount = map[amountcolumn] as int,
         description = map[descridecolumn] as String,
         date = map[daycolumn] as int,
         month = map[monthcolumn] as int,
