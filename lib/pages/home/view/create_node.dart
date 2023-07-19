@@ -1,13 +1,14 @@
 part of '../widgets/tab_bar.dart';
 
-class CreateExpenseDialog extends StatefulWidget {
-  const CreateExpenseDialog({super.key});
+class CreateNewNodeDialog extends StatefulWidget {
+  const CreateNewNodeDialog({super.key, required this.isIncome});
+  final bool isIncome;
 
   @override
-  State<CreateExpenseDialog> createState() => _CreateExpenseDialogState();
+  State<CreateNewNodeDialog> createState() => _CreateNewNodeDialogState();
 }
 
-class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
+class _CreateNewNodeDialogState extends State<CreateNewNodeDialog> {
   late final TextEditingController _amountController;
   late final TextEditingController _descriptionController;
 
@@ -31,9 +32,9 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text(
-        'Expense',
-        style: TextStyle(color: Colors.red),
+      title: Text(
+        (widget.isIncome) ? 'Income' : 'Expense',
+        style: TextStyle(color: (widget.isIncome) ? Colors.green : Colors.red),
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -42,22 +43,21 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
           TextField(
             controller: _amountController,
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               labelText: 'Amount',
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.red),
+                borderSide: BorderSide(
+                    color: (widget.isIncome) ? Colors.green : Colors.red),
               ),
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
               prefixIcon: Icon(
                 Icons.currency_rupee_outlined,
-                color: Colors.red,
+                color: (widget.isIncome) ? Colors.green : Colors.red,
               ),
             ),
           ),
           // Margin
-          const SizedBox(
-            height: 18,
-          ),
+          const SizedBox(height: 18),
           // Description Field
           TextField(
             controller: _descriptionController,
@@ -76,15 +76,15 @@ class _CreateExpenseDialogState extends State<CreateExpenseDialog> {
           left: 22.0, right: 22.0, top: 25.0, bottom: 8.0),
       actions: [
         TextButton(
-            onPressed: (){
+            onPressed: () async {
               Navigator.of(context).pop();
               if (_amountController.text.isNotEmpty &&
                   _descriptionController.text.isNotEmpty) {
-                _databaseService.createExpenseNode(
-                  amount: int.tryParse(_amountController.text),
+                await _databaseService.createNode(
+                  amount: int.tryParse(_amountController.text)!,
                   description: _descriptionController.text.toString(),
+                  isIncome: (widget.isIncome) ? 1 : 0,
                 );
-                StateController().setStates();
               }
             },
             child: const Text("Done"))

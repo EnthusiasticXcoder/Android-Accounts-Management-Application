@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/utilities/controllers/state_controller.dart';
 
 import 'package:my_app/pages/home/view/display.dart';
 import 'package:my_app/helpers/loading/loading_tile.dart';
 
 import 'package:my_app/services/database_service.dart';
-import 'package:my_app/utilities/controllers/vertical_controller.dart';
 
 part 'tab_list.dart';
 part 'node_tile.dart';
-part '../view/expense.dart';
-part '../view/income.dart';
+part '../view/create_node.dart';
 
 class TabbarWidget extends StatefulWidget {
-  const TabbarWidget({super.key});
+  const TabbarWidget({super.key, required this.verticalcontroller});
+  final ScrollController verticalcontroller;
 
   @override
   State<TabbarWidget> createState() => _TabbarWidgetState();
@@ -81,16 +79,24 @@ class _TabbarWidgetState extends State<TabbarWidget>
             controller: _tabController,
             children: <Widget>[
               // Income Tab
-              TabListView(filter: _filter, isIncome: true),
+              TabListView(
+                filter: _filter,
+                isIncome: true,
+                controller: widget.verticalcontroller,
+              ),
               // Expenditure Tab
-              TabListView(filter: _filter, isIncome: false),
+              TabListView(
+                filter: _filter,
+                isIncome: false,
+                controller: widget.verticalcontroller,
+              ),
             ],
           ),
         ),
       ],
     );
   }
-  
+
   Widget _uppernauchwidget(BuildContext context) => Center(
         child: Container(
           width: 50,
@@ -166,17 +172,11 @@ class _TabbarWidgetState extends State<TabbarWidget>
         ),
         child: FloatingActionButton(
           onPressed: () {
-            if (_tabController.index == 0) {
-              showDialog(
-                context: context,
-                builder: (context) => const CreateIncomeDialog(),
-              );
-            } else if (_tabController.index == 1) {
-              showDialog(
-                context: context,
-                builder: (context) => const CreateExpenseDialog(),
-              );
-            }
+            final isIncome = (_tabController.index == 0) ? true : false;
+            showDialog(
+              context: context,
+              builder: (context) => CreateNewNodeDialog(isIncome: isIncome),
+            );
           },
           child: const Icon(
             Icons.add_rounded,
