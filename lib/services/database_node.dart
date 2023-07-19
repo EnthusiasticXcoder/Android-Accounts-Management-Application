@@ -30,5 +30,5 @@ class DatabaseNote {
         year = map[yearcolumn] as int,
         hour = map[hourcolumn] as int,
         minutes = map[minutescolumn] as int,
-        isincome = (map[statuscolumn] as int == 1) ? true : false;
+        isincome = (map[isIncomecolumn] as int == 1) ? true : false;
 }

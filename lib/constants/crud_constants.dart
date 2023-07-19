@@ -7,7 +7,7 @@ const monthcolumn = 'Month';
 const yearcolumn = 'Year';
 const hourcolumn = 'Hour';
 const minutescolumn = 'Minutes';
-const statuscolumn = 'Status';
+const isIncomecolumn = 'Status';
 const createTable = '''CREATE TABLE IF NOT EXISTS "Accounts" (
 	"Amount"	INTEGER,
 	"Description"	TEXT,
