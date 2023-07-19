@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:flutter/material.dart';
 import 'package:my_app/constants/crud_constants.dart';
 import 'package:my_app/services/database_exceptions.dart';
 import 'package:my_app/services/database_node.dart';
@@ -10,8 +8,6 @@ import 'package:sqflite/sqflite.dart';
 
 class DatabaseService {
   Database? _db;
-
-  int _totalIncome = 0, _totalExpense = 0;
 
   List<DatabaseNote> _nodes = [];
 
@@ -23,16 +19,58 @@ class DatabaseService {
   }
   factory DatabaseService() => _service;
 
-  int get gettotalIncome => _totalIncome;
+  int get totalIncome {
+    if (_nodes.isNotEmpty) {
+      final nodes = _nodes.where((node) => node.isincome);
+      if (nodes.isNotEmpty) {
+        return nodes
+            .map((node) => node.amount)
+            .reduce((value, element) => value + element);
+      } else {
+        return 0;
+      }
+    } else {
+      return 0;
+    }
+  }
 
-  int get getTotalExpense => _totalExpense;
+  int get totalExpense {
+    if (_nodes.isNotEmpty) {
+      final nodes = _nodes.where((node) => !node.isincome);
+      if (nodes.isNotEmpty) {
+        return nodes
+            .map((node) => node.amount)
+            .reduce((value, element) => value + element);
+      } else {
+        return 0;
+      }
+    } else {
+      return 0;
+    }
+  }
 
-  int get getBalance => (_totalIncome >= _totalExpense)
-      ? (_totalIncome - _totalExpense)
-      : (_totalExpense - _totalIncome);
+  int get balance {
+    if (_nodes.isNotEmpty) {
+      return _nodes
+          .map((node) => (node.isincome) ? node.amount : node.amount * (-1))
+          .reduce((value, element) => value + element);
+    } else {
+      return 0;
+    }
+  }
 
-  Color get diffColor =>
-      (_totalIncome >= _totalExpense) ? Colors.greenAccent : Colors.red;
+  int get getmaxnode {
+    if (_nodes.isNotEmpty) {
+      return _nodes
+          .reduce(
+              (max, element) => (max.amount > element.amount) ? max : element)
+          .amount;
+    } else {
+      return 0;
+    }
+  }
+
+  List<DatabaseNote> get allNodes => _nodes;
 
   List<DatabaseNote> getNodes(DateTime? filter, value) {
     if (filter == null) {
@@ -50,47 +88,11 @@ class DatabaseService {
 
   Stream<DatabaseNote> getstream() => _nodesStreamController.stream;
 
-  Future<List<int>> _getTotalIncomeExpense() async {
-    await _ensureDbIsOpen();
-    final db = _getDatabaseOrThrow();
-    final result = await db.query(
-      tableName,
-      columns: ['Sum($amountcolumn) as $amountcolumn', statuscolumn],
-      groupBy: statuscolumn,
-    );
-
-    switch (result.length) {
-      case (0):
-        return [0, 0];
-      case (1):
-        if ((result[0][statuscolumn] as int) == 0) {
-          return [0, result[0][amountcolumn] as int];
-        } else {
-          return [result[0][amountcolumn] as int, 0];
-        }
-      case (2):
-        return [result[1][amountcolumn] as int, result[0][amountcolumn] as int];
-    }
-    return [0, 0];
-  }
-
-  Future<void> createExpenseNode({
-    required amount,
-    required description,
-  }) async =>
-      await _createNode(amount, description, 0);
-
-  Future<void> createIncomeNode({
-    required amount,
-    required description,
-  }) async =>
-      await _createNode(amount, description, 1);
-
-  Future<void> _createNode(
-    int amount,
-    String description,
-    int status,
-  ) async {
+  Future<void> createNode({
+    required int amount,
+    required String description,
+    required int isIncome,
+  }) async {
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     DateTime now = DateTime.now();
@@ -103,13 +105,8 @@ class DatabaseService {
       yearcolumn: (now.year).toInt(),
       hourcolumn: (now.hour).toInt(),
       minutescolumn: (now.minute).toInt(),
-      statuscolumn: status,
+      isIncomecolumn: isIncome,
     };
-    if (status == 0) {
-      _totalExpense += amount;
-    } else {
-      _totalIncome += amount;
-    }
     // adding nodes to local buffer
     final node = DatabaseNote.fromRow(values);
     _nodes.add(node);
@@ -118,15 +115,12 @@ class DatabaseService {
     await db.insert(tableName, values);
   }
 
-  Future<void> _setvariables() async {
-    final totalsum = await _getTotalIncomeExpense();
-    _totalIncome = totalsum[0];
-    _totalExpense = totalsum[1];
-    _nodes = await getallNodes();
+  Future<void> _catchallNodes() async {
+    _nodes = await _getallNodes();
     _nodesStreamController.add(_nodes[0]);
   }
 
-  Future<List<DatabaseNote>> getallNodes() async {
+  Future<List<DatabaseNote>> _getallNodes() async {
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
 
@@ -173,7 +167,7 @@ class DatabaseService {
       // create the user table
       await db.execute(createTable);
       // Setting Values
-      await _setvariables();
+      await _catchallNodes();
     } on MissingPlatformDirectoryException {
       throw UnableToGetDocumentsDirectory();
     }
