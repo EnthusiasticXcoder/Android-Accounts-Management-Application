@@ -24,7 +24,7 @@ class BarChart extends StatelessWidget {
           maximumLabels: 12,
           majorGridLines: const MajorGridLines(width: 0.0),
           axisLabelFormatter: (axisLabelRenderArgs) {
-            final text = axisLabelRenderArgs.text.split(' ')[1];
+            final text = axisLabelRenderArgs.text.split(' ')[0];
             const style = TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.w500,

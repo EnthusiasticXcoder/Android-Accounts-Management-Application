@@ -49,8 +49,6 @@ class _MyHomeViewState extends State<MyHomeView> {
               Color.fromARGB(223, 130, 196, 250),
             ])),
           ),
-          // Header Widget
-          const Headwidget(),
 
           // Bottom Sliding Pannel
           SlidingUpPanel(
@@ -96,6 +94,9 @@ class _MyHomeViewState extends State<MyHomeView> {
             minHeight: context.getminheight(),
             maxHeight: context.getmaxheight(),
           ),
+
+          // Header Widget
+          const Headwidget(),
         ],
       ),
     );

@@ -26,6 +26,13 @@ class _HeadwidgetState extends State<Headwidget>
   }
 
   @override
+  void dispose() {
+    _textEditingController.dispose();
+    _con.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Stack(
