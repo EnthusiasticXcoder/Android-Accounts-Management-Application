@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/pages/settings/widgets/accounts.dart';
-import 'package:my_app/pages/settings/widgets/catagory.dart';
+import 'package:share_plus/share_plus.dart';
+
+import '../widgets/widgets.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({super.key});
@@ -31,7 +32,13 @@ class _SettingsViewState extends State<SettingsView> {
                 subtitle: const Text('Import Data From Storage')),
 
             // share button
-            buttonTile(icon: Icons.share, title: 'Share Data'),
+            buttonTile(
+              icon: Icons.share,
+              title: 'Share Data',
+              onPress: () async {
+                await Share.share('Anshul');
+              },
+            ),
 
             // catagory
             const CatagoryBuild(
@@ -50,12 +57,14 @@ class _SettingsViewState extends State<SettingsView> {
     );
   }
 
-  ListTile buttonTile(
-      {required IconData icon,
-      required String title,
-      Widget? subtitle,
-      IconData? traling}) {
+  ListTile buttonTile({
+    required IconData icon,
+    required String title,
+    Widget? subtitle,
+    VoidCallback? onPress,
+  }) {
     return ListTile(
+      onTap: onPress,
       leading: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Icon(
@@ -68,13 +77,6 @@ class _SettingsViewState extends State<SettingsView> {
         style: const TextStyle(fontSize: 16),
       ),
       subtitle: subtitle,
-      trailing: IconButton(
-        onPressed: () {},
-        icon: Icon(
-          traling,
-          size: 30,
-        ),
-      ),
     );
   }
 }
