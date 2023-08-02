@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/pages/settings/view/profile.dart';
 
 class Account extends StatefulWidget {
   const Account({super.key});
@@ -28,24 +29,42 @@ class _AccountState extends State<Account> {
   Widget build(BuildContext context) {
     return ExpansionTile(
       controller: _controller,
-      leading: const Hero(
+      // Profile photo
+      leading: Hero(
         tag: 'Active User',
-        child: CircleAvatar(
-            radius: 40,
-            child: Icon(
-              Icons.person,
-              size: 40.0,
-            )),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => ProfilePage(),
+            ));
+          },
+          child: const CircleAvatar(
+              radius: 40,
+              child: Icon(
+                Icons.person,
+                size: 40.0,
+              )),
+        ),
       ),
+      // Title and subtitle
       title: Text(
         active.elementAt(0),
         style: const TextStyle(fontSize: 20),
       ),
       subtitle: Text(active.elementAt(1)),
-      trailing: const Icon(
-        Icons.arrow_drop_down_circle_outlined,
-        color: Colors.black87,
+      // Edit button
+      trailing: IconButton(
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => ProfilePage(),
+          ));
+        },
+        icon: const Icon(
+          Icons.edit_sharp,
+          color: Colors.black87,
+        ),
       ),
+      // Available accounts
       children:
           // accounts
           accounts
@@ -64,6 +83,7 @@ class _AccountState extends State<Account> {
               )
               .followedBy(
         [
+          // add acount
           const ListTile(
             leading: Icon(Icons.person_add_alt),
             title: Text('Add Another Account'),
