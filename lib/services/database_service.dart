@@ -168,6 +168,15 @@ class DatabaseService {
     }
   }
 
+  Future<void> restartDatabase(String path) async {
+    _db = await openDatabase(path);
+    await _catchallNodes();
+    if (_nodes == []) {
+      _nodes = await _getallNodes();
+      _nodesStreamController.add(_nodes.elementAt(0));
+    }
+  }
+
   Future<void> close() async {
     final db = _db;
     if (db != null) {

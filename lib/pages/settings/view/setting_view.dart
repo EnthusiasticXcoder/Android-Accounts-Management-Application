@@ -1,4 +1,11 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:my_app/constants/crud_constants.dart';
+import 'package:my_app/services/database_service.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../widgets/widgets.dart';
@@ -27,17 +34,17 @@ class _SettingsViewState extends State<SettingsView> {
             const Divider(height: 30),
             // Import Button
             buttonTile(
-                icon: Icons.drive_file_move_outline,
-                title: 'Import Data',
-                subtitle: const Text('Import Data From Storage')),
+              icon: Icons.drive_file_move_outline,
+              title: 'Import Data',
+              subtitle: const Text('Import Data From Storage'),
+              onPress: import,
+            ),
 
             // share button
             buttonTile(
               icon: Icons.share,
               title: 'Share Data',
-              onPress: () async {
-                await Share.share('Anshul');
-              },
+              onPress: share,
             ),
 
             // catagory
@@ -79,4 +86,24 @@ class _SettingsViewState extends State<SettingsView> {
       subtitle: subtitle,
     );
   }
+}
+
+void share() async {
+  final docsPath = await getApplicationDocumentsDirectory();
+  final dbPath = join(docsPath.path, dbName);
+
+  await Share.shareXFiles([XFile(dbPath)]);
+}
+
+void import() async {
+  final filePath = await FilePicker.platform.pickFiles();
+  final path = filePath!.files.first.path;
+
+  final docsPath = await getApplicationDocumentsDirectory();
+  final dbPath = join(docsPath.path, dbName);
+  
+  await File(dbPath).delete();
+  await File(path!).copy(dbPath);
+
+  await DatabaseService().restartDatabase(path);
 }
