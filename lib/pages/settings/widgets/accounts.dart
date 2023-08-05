@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+
+import 'package:my_app/pages/regester/view/regester_view.dart';
 import 'package:my_app/pages/settings/view/profile.dart';
 
+import 'package:my_app/services/services.dart'
+    show changeActiveUser, DatabaseUser;
+
 class Account extends StatefulWidget {
-  const Account({super.key});
+  final Iterable<DatabaseUser> accounts;
+  final DatabaseUser active;
+  const Account({super.key, required this.accounts, required this.active});
 
   @override
   State<Account> createState() => _AccountState();
@@ -10,14 +17,6 @@ class Account extends StatefulWidget {
 
 class _AccountState extends State<Account> {
   late final ExpansionTileController _controller;
-  List accounts = [
-    ['Anshul Verma', 'Personal'],
-    ['Aayush pal', 'Family'],
-    ['abu bakar', 'Professonal'],
-    ['Ankit yadav', 'Friends']
-  ];
-
-  List active = ['Anshul Verma', 'Personal'];
 
   @override
   void initState() {
@@ -28,6 +27,7 @@ class _AccountState extends State<Account> {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
+      shape: const ContinuousRectangleBorder(),
       controller: _controller,
       // Profile photo
       leading: Hero(
@@ -35,12 +35,17 @@ class _AccountState extends State<Account> {
         child: GestureDetector(
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => ProfilePage(),
+              builder: (context) => ProfilePage(
+                activeuser: widget.active,
+              ),
             ));
           },
-          child: const CircleAvatar(
+          child: CircleAvatar(
               radius: 40,
-              child: Icon(
+              foregroundImage: (widget.active.imagePath == null)
+                  ? null
+                  : AssetImage(widget.active.imagePath!),
+              child: const Icon(
                 Icons.person,
                 size: 40.0,
               )),
@@ -48,15 +53,17 @@ class _AccountState extends State<Account> {
       ),
       // Title and subtitle
       title: Text(
-        active.elementAt(0),
+        widget.active.name,
         style: const TextStyle(fontSize: 20),
       ),
-      subtitle: Text(active.elementAt(1)),
+      subtitle: Text(widget.active.info),
       // Edit button
       trailing: IconButton(
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => ProfilePage(),
+            builder: (context) => ProfilePage(
+              activeuser: widget.active,
+            ),
           ));
         },
         icon: const Icon(
@@ -67,26 +74,35 @@ class _AccountState extends State<Account> {
       // Available accounts
       children:
           // accounts
-          accounts
-              .where((item) => item.toString() != active.toString())
+          widget.accounts
+              .where((user) => user.id != widget.active.id)
               .map(
-                (item) => ListTile(
-                  onTap: () {
-                    active = item;
+                (user) => ListTile(
+                  onTap: () async {
+                    await changeActiveUser(user);
                     _controller.collapse();
                     setState(() {});
                   },
-                  leading: const CircleAvatar(child: Icon(Icons.person)),
-                  title: Text(item[0]),
-                  subtitle: Text(item[1]),
+                  leading: CircleAvatar(
+                      foregroundImage: (user.imagePath == null)
+                          ? null
+                          : AssetImage(user.imagePath!),
+                      child: const Icon(Icons.person)),
+                  title: Text(user.name),
+                  subtitle: Text(user.info),
                 ),
               )
               .followedBy(
         [
           // add acount
-          const ListTile(
-            leading: Icon(Icons.person_add_alt),
-            title: Text('Add Another Account'),
+          ListTile(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const RegisterView(),
+              ));
+            },
+            leading: const Icon(Icons.person_add_alt),
+            title: const Text('Add Another Account'),
           )
         ],
       ).toList(),

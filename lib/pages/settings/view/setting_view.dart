@@ -1,13 +1,9 @@
-import 'dart:io';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:my_app/constants/crud_constants.dart';
-import 'package:my_app/services/database_service.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:my_app/pages/home/view/home_view.dart';
+import 'package:my_app/pages/regester/view/regester_view.dart';
+import 'package:my_app/services/database_exceptions.dart';
 
+import 'package:my_app/services/services.dart';
 import '../widgets/widgets.dart';
 
 class SettingsView extends StatefulWidget {
@@ -21,42 +17,77 @@ class _SettingsViewState extends State<SettingsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      backgroundColor: const Color.fromARGB(210, 213, 240, 251),
+      appBar: AppBar(backgroundColor: Colors.transparent),
       body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // margin
-            const SizedBox(height: 20.0),
-            // profile
-            const Account(),
-            // Devider
-            const Divider(height: 30),
-            // Import Button
-            buttonTile(
-              icon: Icons.drive_file_move_outline,
-              title: 'Import Data',
-              subtitle: const Text('Import Data From Storage'),
-              onPress: import,
+            const SizedBox(height: 30),
+            // Profile settings
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(24)),
+              child:
+                  // profile
+                  ValueListenableBuilder(
+                      valueListenable: userValueNotifier,
+                      builder: (context, activeUser, _) => Account(
+                            active: activeUser,
+                            accounts: allUsers,
+                          )),
             ),
 
-            // share button
-            buttonTile(
-              icon: Icons.share,
-              title: 'Share Data',
-              onPress: share,
-            ),
+            // other settings
+            Container(
+              margin:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(24)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Import Button
+                  buttonTile(
+                    icon: Icons.drive_file_move_outline,
+                    title: 'Import Data',
+                    subtitle: const Text('Import Data From Storage'),
+                    onPress: () async {
+                      try {
+                        await import().then((value) =>
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const MyHomeView(),
+                            )));
+                      } on NoUsersFoundinDatabase {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const RegisterView(),
+                        ));
+                      }
+                    },
+                  ),
 
-            // catagory
-            const CatagoryBuild(
-              icon: Icons.sort,
-              title: 'Catagory',
+                  // share button
+                  buttonTile(
+                    icon: Icons.share,
+                    title: 'Share Data',
+                    onPress: share,
+                  ),
+                ],
+              ),
             ),
-
-            // sub catagory
-            const CatagoryBuild(
-              icon: Icons.list_alt,
-              title: 'Sub Catagory',
+            // catagory config
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(24)),
+              child:
+                  // catagory
+                  CatagoryBuild(filters: allFilters),
             ),
           ],
         ),
@@ -86,24 +117,4 @@ class _SettingsViewState extends State<SettingsView> {
       subtitle: subtitle,
     );
   }
-}
-
-void share() async {
-  final docsPath = await getApplicationDocumentsDirectory();
-  final dbPath = join(docsPath.path, dbName);
-
-  await Share.shareXFiles([XFile(dbPath)]);
-}
-
-void import() async {
-  final filePath = await FilePicker.platform.pickFiles();
-  final path = filePath!.files.first.path;
-
-  final docsPath = await getApplicationDocumentsDirectory();
-  final dbPath = join(docsPath.path, dbName);
-  
-  await File(dbPath).delete();
-  await File(path!).copy(dbPath);
-
-  await DatabaseService().restartDatabase(path);
 }
