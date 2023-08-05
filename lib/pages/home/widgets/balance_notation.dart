@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:animated_digit/animated_digit.dart';
-import 'package:my_app/constants/crud_constants.dart';
 
 class BalanceNotationWidget extends StatelessWidget {
   final int income, expense, balance;
@@ -62,7 +61,7 @@ class BalanceNotationWidget extends StatelessWidget {
 
         // Balance Notation
         Text(
-          totalBalance,
+          'TOTAL BALANCE',
           textHeightBehavior: const TextHeightBehavior(
             applyHeightToFirstAscent: false,
             applyHeightToLastDescent: false,

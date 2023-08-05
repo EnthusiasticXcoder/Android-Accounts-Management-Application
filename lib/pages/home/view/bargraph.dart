@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/services/database_node.dart';
+import 'package:my_app/services/node/database_node.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class BarChart extends StatelessWidget {
-  final List<DatabaseNote> nodes;
+  final List<DatabaseNode> nodes;
 
   const BarChart({super.key, required this.nodes});
 
