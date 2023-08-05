@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/pages/home/widgets/widgets.dart';
 
-import 'package:my_app/pages/home/view/display.dart';
-import 'package:my_app/helpers/loading/loading_tile.dart';
-import 'package:my_app/services/database_exceptions.dart';
-
-import 'package:my_app/services/database_service.dart';
-
-part 'tab_list.dart';
-part 'node_tile.dart';
-part '../view/create_node.dart';
 
 class TabbarWidget extends StatefulWidget {
-  const TabbarWidget({super.key, required this.verticalcontroller});
   final ScrollController verticalcontroller;
+
+  const TabbarWidget({super.key, required this.verticalcontroller});
 
   @override
   State<TabbarWidget> createState() => _TabbarWidgetState();

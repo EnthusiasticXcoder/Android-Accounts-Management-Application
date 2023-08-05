@@ -1,4 +1,5 @@
-part of 'tab_bar.dart';
+import 'package:flutter/material.dart';
+import 'package:my_app/pages/home/widgets/display.dart';
 
 
 typedef NodeCallback = void Function();
@@ -15,7 +16,8 @@ class NodeTile extends StatelessWidget {
     required this.isIncome,
     required this.description,
     required this.dateTime,
-    required this.amount, required this.onDelete,
+    required this.amount,
+    required this.onDelete,
   });
 
   @override
