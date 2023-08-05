@@ -12,7 +12,9 @@ class EditableProfile extends StatelessWidget {
         Hero(
           tag: 'Active User',
           child: GestureDetector(
-            onTap: () {},
+            onTap: () {
+              showImagePicker(context);
+            },
             child: CircleAvatar(
               backgroundColor: Colors.blueGrey.withAlpha(240),
               radius: 90.0,
