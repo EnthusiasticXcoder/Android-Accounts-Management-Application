@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/pages/home/view/home_view.dart';
 
-void main() => runApp(const MyApp());
+import 'package:my_app/services/services.dart';
+
+import 'pages/home/view/home_view.dart';
+import 'pages/regester/view/regester_view.dart';
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  initialiseDatabase().then((value) => runApp(const MyApp()));
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,7 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue),
           useMaterial3: true),
-      home: const MyHomeView(),
+      home: (allUsers.isEmpty) ? const RegisterView() : const MyHomeView(),
     );
   }
 }
