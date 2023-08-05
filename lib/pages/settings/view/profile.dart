@@ -52,12 +52,6 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
 
-              // profile pic
-              Positioned(
-                top: MediaQuery.of(context).size.height * 0.14,
-                right: MediaQuery.of(context).size.width * 0.05,
-                child: const EditableProfile(),
-              ),
               // Form Filet entry Input
               SingleChildScrollView(
                 child: Form(
@@ -107,6 +101,13 @@ class ProfilePage extends StatelessWidget {
                     ),
                   ),
                 ),
+              ),
+
+              // profile pic
+              Positioned(
+                top: MediaQuery.of(context).size.height * 0.14,
+                right: MediaQuery.of(context).size.width * 0.05,
+                child: const EditableProfile(),
               ),
             ])));
   }

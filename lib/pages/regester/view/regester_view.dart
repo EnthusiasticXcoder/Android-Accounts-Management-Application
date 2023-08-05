@@ -54,14 +54,6 @@ class _RegisterViewState extends State<RegisterView> {
                 style: TextStyle(color: Colors.white, fontSize: 33),
               ),
             ),
-            // Profile Photo selector
-            Positioned(
-              top: MediaQuery.of(context).size.height * 0.10,
-              right: MediaQuery.of(context).size.width * 0.05,
-              child: EditableProfile(
-                imagePath: _imagePath,
-              ),
-            ),
 
             // Name Form
             SingleChildScrollView(
@@ -124,6 +116,15 @@ class _RegisterViewState extends State<RegisterView> {
                         )),
                   )
                 ]),
+              ),
+            ),
+
+            // Profile Photo selector
+            Positioned(
+              top: MediaQuery.of(context).size.height * 0.10,
+              right: MediaQuery.of(context).size.width * 0.05,
+              child: EditableProfile(
+                imagePath: _imagePath,
               ),
             ),
           ],

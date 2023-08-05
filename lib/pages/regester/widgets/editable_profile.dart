@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/pages/regester/widgets/image_picker.dart';
 
 class EditableProfile extends StatelessWidget {
   final ValueNotifier? imagePath;
@@ -25,18 +26,20 @@ class EditableProfile extends StatelessWidget {
             ),
           ),
         ),
-        //Edit for progile photo
+        //Edit for profile photo
         Positioned(
           bottom: 0,
           left: -10,
           child: MaterialButton(
+            padding: const EdgeInsets.all(8.0),
             elevation: 1,
             onPressed: () {
               imagePath?.value = 'Path/To/Image';
+              showImagePicker(context);
             },
             shape: const CircleBorder(),
-            color: Colors.white,
-            child: Icon(Icons.edit, color: Colors.blue.shade400),
+            color: Colors.lightBlue.shade200,
+            child: const Icon(Icons.photo_camera_sharp, color: Colors.white),
           ),
         ),
       ],
