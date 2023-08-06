@@ -26,3 +26,19 @@ class Catagory {
   @override
   String toString() => '$id , $name';
 }
+
+class FilterBy {
+  final int? date;
+  final int year;
+  final int? month;
+  final int? catagory;
+  final int? subcatagory;
+
+  const FilterBy({
+    this.date,
+    required this.year,
+    this.month,
+    this.catagory,
+    this.subcatagory,
+  });
+}

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart' show immutable;
 import 'package:my_app/constants/crud_constants.dart';
+import 'package:my_app/services/filter/database_filter.dart';
 
 @immutable
 class DatabaseNode {
@@ -40,4 +41,19 @@ class DatabaseNode {
         hour = map[hourcolumn] as int,
         minutes = map[minutescolumn] as int,
         isincome = (map[isIncomecolumn] as int == 1) ? true : false;
+
+  bool cheackFilter(FilterBy filter) {
+    bool factor1 =
+        (filter.catagory == null) ? true : (catogary == filter.catagory);
+
+    bool factor2 = (filter.subcatagory == null)
+        ? true
+        : (subCatagory == filter.subcatagory);
+
+    bool factor3 = (filter.date == null) ? true : (date == filter.date);
+    bool factor4 = (filter.month == null) ? true : (month == filter.month);
+    bool factor5 = (year == filter.year);
+
+    return factor1 && factor2 && factor3 && factor4 && factor5;
+  }
 }

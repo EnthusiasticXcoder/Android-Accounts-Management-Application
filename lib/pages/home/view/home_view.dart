@@ -53,7 +53,7 @@ class _MyHomeViewState extends State<MyHomeView> {
                 PageBox(
                   child: ValueListenableBuilder(
                     valueListenable: nodeValueNotifier,
-                    builder: (context, value, child) => Linegraph(
+                    builder: (context, allNodes, child) => Linegraph(
                       maxvalue: maxNodeAmount,
                       nodes: allNodes.toList(),
                     ),
@@ -75,7 +75,7 @@ class _MyHomeViewState extends State<MyHomeView> {
                 PageBox(
                     child: ValueListenableBuilder(
                   valueListenable: nodeValueNotifier,
-                  builder: (context, value, child) => BarChart(
+                  builder: (context, allNodes, child) => BarChart(
                     nodes: allNodes.toList(),
                   ),
                 )),

@@ -98,9 +98,10 @@ class DatabaseService {
   }
 
   // Nodes
-  List<DatabaseNode> filterNodes(DateTime? filter, value) {
-    final nodes = _currentNodes.value;
-    return _nodeService.filterNodes(nodes.toList(), filter, value);
+  void filterNodes(FilterBy? filter, value) {
+    final nodes = _nodeService.filterNodes(
+        nodes: _currentNodes.value, filter: filter, isIncome: value);
+    _currentNodes.value = nodes;
   }
 
   Future<void> createNode({
@@ -129,12 +130,12 @@ class DatabaseService {
   List<Filters> get filters => _filterService.allFilters;
 
   Future<void> createCatagory(
-  
-  String name,
+    String name,
   ) async {
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
-    await _filterService.createCatagory(db: db, userId: _userService.activeUser.id, name: name);
+    await _filterService.createCatagory(
+        db: db, userId: _userService.activeUser.id, name: name);
   }
 
   Future<void> createSubCatagory({

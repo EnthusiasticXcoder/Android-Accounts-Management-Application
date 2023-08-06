@@ -29,7 +29,15 @@ class DisplayMoreDialog extends StatelessWidget {
         ],
       ),
       iconPadding: const EdgeInsets.only(top: 3.0),
-      title: Row(
+      title: Text(
+        description,
+        textAlign: TextAlign.justify,
+        style: const TextStyle(
+          color: Colors.blueGrey,
+          fontSize: 15,
+        ),
+      ),
+      content: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
@@ -50,14 +58,6 @@ class DisplayMoreDialog extends StatelessWidget {
             ),
           ),
         ],
-      ),
-      content: Text(
-        description,
-        textAlign: TextAlign.justify,
-        style: const TextStyle(
-          color: Colors.blueGrey,
-          fontSize: 15,
-        ),
       ),
       actions: <Widget>[
         TextButton(

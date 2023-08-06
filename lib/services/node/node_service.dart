@@ -1,3 +1,4 @@
+import 'package:my_app/services/filter/database_filter.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../constants/crud_constants.dart';
@@ -64,18 +65,15 @@ class NodeService {
     }
   }
 
-  List<DatabaseNode> filterNodes(
-      List<DatabaseNode> nodes, DateTime? filter, value) {
+  Iterable<DatabaseNode> filterNodes(
+      {required Iterable<DatabaseNode> nodes,
+      required bool isIncome,
+      FilterBy? filter}) {
     if (filter == null) {
-      return nodes.reversed.where((node) => node.isincome == value).toList();
+      return nodes.toList().reversed.where((node) => node.isincome == isIncome);
     } else {
-      return nodes
-          .where((node) =>
-              node.isincome == value &&
-              node.date >= filter.day &&
-              node.month == filter.month &&
-              node.year == filter.year)
-          .toList();
+      return nodes.where(
+          (node) => node.isincome == isIncome && node.cheackFilter(filter));
     }
   }
 
