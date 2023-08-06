@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:my_app/pages/home/view/home_view.dart';
+import 'package:my_app/pages/home/home_view.dart';
 import 'package:my_app/services/services.dart';
 import '../widgets/editable_profile.dart';
 

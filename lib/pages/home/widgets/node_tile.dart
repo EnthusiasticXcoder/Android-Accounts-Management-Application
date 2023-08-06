@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/pages/home/widgets/display.dart';
+import 'package:my_app/pages/home/view/display.dart';
 
 
 typedef NodeCallback = void Function();

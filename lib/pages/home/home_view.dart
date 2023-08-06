@@ -3,8 +3,6 @@ import 'package:my_app/services/services.dart';
 
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-import 'package:my_app/pages/home/view/bargraph.dart';
-import 'package:my_app/pages/home/view/linegraph.dart';
 import 'package:my_app/pages/home/widgets/widgets.dart';
 
 class MyHomeView extends StatefulWidget {

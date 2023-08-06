@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/pages/home/view/home_view.dart';
+import 'package:my_app/pages/home/home_view.dart';
 import 'package:my_app/pages/regester/view/regester_view.dart';
 import 'package:my_app/services/database_exceptions.dart';
 

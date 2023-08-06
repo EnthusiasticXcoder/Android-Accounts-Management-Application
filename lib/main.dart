@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:my_app/services/services.dart';
 
-import 'pages/home/view/home_view.dart';
+import 'pages/home/home_view.dart';
 import 'pages/regester/view/regester_view.dart';
 
 void main() {
