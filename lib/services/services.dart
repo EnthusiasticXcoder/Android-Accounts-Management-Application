@@ -27,7 +27,7 @@ Future<void> initialiseDatabase() async {
   await service.initialiseNodes();
 }
 
-ValueNotifier get nodeValueNotifier {
+ValueNotifier<Iterable<DatabaseNode>> get nodeValueNotifier {
   // Get Node Value Notifier
   final service = DatabaseService();
   return service.nodeValueLisnable;
@@ -55,12 +55,6 @@ int get sumBalance {
   // Get The Sum of Amounts Of all Nodes with +vs income and -vs expense
   final service = DatabaseService();
   return service.sumBalance;
-}
-
-Iterable<DatabaseNode> get allNodes {
-  // Get All The Current active Node
-  final service = DatabaseService();
-  return service.allNodes;
 }
 
 Future<void> createNode({
