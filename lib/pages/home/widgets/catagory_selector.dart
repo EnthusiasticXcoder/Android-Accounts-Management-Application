@@ -31,12 +31,12 @@ class CatagorySelector extends StatelessWidget {
               onselect: (int? newValue) {
                 setState(() {
                   isVisible = true;
-
+                  if (catagory.isNotEmpty) catagory.removeLast();
                   catagory.insert(0, newValue);
                   _subCatagoryList = filter
                       .firstWhere((element) => element.catagory.id == newValue)
                       .subcatagory;
-
+                  if (subcatagory.isNotEmpty) subcatagory.removeLast();
                   subcatagory.insert(0, null);
                 });
               }),
@@ -52,6 +52,7 @@ class CatagorySelector extends StatelessWidget {
                   hint: 'SubCatagory',
                   onselect: (int? newValue) {
                     setState(() {
+                      if (subcatagory.isNotEmpty) subcatagory.removeLast();
                       subcatagory.insert(0, newValue);
                     });
                   })),
