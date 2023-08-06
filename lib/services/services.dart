@@ -93,13 +93,6 @@ Iterable<DatabaseUser> get allUsers {
   return allUsers;
 }
 
-DatabaseUser get activeUser {
-  // Get Active User
-  final service = DatabaseService();
-  final activeUsers = service.activeUser;
-  return activeUsers;
-}
-
 Future<void> changeActiveUser(DatabaseUser user) async {
   // Change The status of all the users and mark new active user
   final service = DatabaseService();
@@ -127,13 +120,8 @@ Future<void> updateUser(
   // update data of current user
   final service = DatabaseService();
 
-  final values = {
-    namecolumn: (name != null) ? name : activeUser.name,
-    infocolumn: (info != null) ? info : activeUser.info,
-    imageColumn: (imagePath != null) ? imagePath : activeUser.imagePath,
-    isactivecolumn: 1
-  };
-  await service.updateUser(values);
+  await service.updateUser(
+      id: id, name: name, info: info, imagePath: imagePath);
 }
 // filters Functions
 
@@ -146,7 +134,7 @@ List<Filters> get allFilters {
 Future<void> createCatagory({required String name}) async {
   // Create A new Catagory
   final service = DatabaseService();
-  await service.createCatagory(userId: activeUser.id, name: name);
+  await service.createCatagory(name);
 }
 
 Future<void> createSubCatagory(

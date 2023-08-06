@@ -100,7 +100,7 @@ class UserService {
         (item.id == user.id) ? user.isactive = true : user.isactive = false;
         return user;
       });
-      _activeUser == user;
+      _activeUser = user;
     }
   }
 
