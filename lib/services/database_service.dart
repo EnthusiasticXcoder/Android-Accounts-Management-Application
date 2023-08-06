@@ -6,13 +6,9 @@ import 'package:sqflite/sqflite.dart';
 import 'package:my_app/constants/crud_constants.dart';
 import 'package:my_app/services/database_exceptions.dart';
 
-import 'package:my_app/services/filter/filter_service.dart';
-import 'package:my_app/services/user/user_service.dart';
-import 'package:my_app/services/node/node_service.dart';
-
-import 'filter/database_filter.dart';
-import 'node/database_node.dart';
-import 'user/database_user.dart';
+import 'filter/filter.dart';
+import 'node/node.dart';
+import 'user/user.dart';
 
 class DatabaseService {
   Database? _db;
