@@ -93,17 +93,19 @@ class FilterService {
     required Database db,
     required int userId,
   }) async {
+    final List<Filters> filter = [];
     final catagories = await getAllCatagory(db: db, userId: userId);
 
     for (var catagory in catagories) {
       final subCatagory =
           await getAllSubCatagory(db: db, catagoryId: catagory.id);
 
-      _catagory.add(Filters(
+      filter.add(Filters(
         catagory: catagory,
         subcatagory: subCatagory.toList(),
       ));
     }
+    _catagory = filter;
   }
 
   Future<Iterable<Catagory>> getAllCatagory({
