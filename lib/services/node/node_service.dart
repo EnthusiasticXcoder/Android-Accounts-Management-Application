@@ -66,9 +66,8 @@ class NodeService {
   }
 
   Iterable<DatabaseNode> filterNodes(
-      {required Iterable<DatabaseNode> nodes,
-      required bool isIncome,
-      FilterBy? filter}) {
+      {Iterable<DatabaseNode>? nodes, bool? isIncome, FilterBy? filter}) {
+    nodes = (nodes == null) ? _nodes : nodes;
     if (filter == null) {
       return nodes.toList().reversed.where((node) => node.isincome == isIncome);
     } else {
@@ -79,6 +78,7 @@ class NodeService {
 
   Future<void> createNode({
     required Database db,
+    required int userId,
     required int amount,
     required int catagoryId,
     required int subCatagoryId,
@@ -88,6 +88,7 @@ class NodeService {
 
     final values = {
       amountcolumn: amount,
+      userIdcolumn: userId,
       catagoryIdcolumn: catagoryId,
       subcatagoryIdcolumn: subCatagoryId,
       datecolumn: (now.day).toInt(),
@@ -101,7 +102,7 @@ class NodeService {
     final id = await db.insert(nodetable, values);
     values.addAll({idcolumn: id});
     // update local nodes
-    _nodes.followedBy([DatabaseNode.fromRow(values)]);
+    _nodes = _nodes.followedBy([DatabaseNode.fromRow(values)]);
   }
 
   Future<void> deleteNode(
@@ -115,7 +116,7 @@ class NodeService {
     if (numberofdelete != 1) {
       throw UnableToDeleteException();
     } else {
-      _nodes.where((element) => element.id != node.id);
+      _nodes = _nodes.where((element) => element.id != node.id);
     }
   }
 

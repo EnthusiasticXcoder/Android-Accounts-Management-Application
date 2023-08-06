@@ -42,7 +42,6 @@ class DatabaseService {
 
   int get maxNodeAmount => _nodeService.getMaxAmount(_currentNodes.value);
 
-  Iterable<DatabaseNode> get allNodes => _currentNodes.value;
   // Users
   Future<void> createUser({
     required String username,
@@ -93,10 +92,13 @@ class DatabaseService {
   }
 
   // Nodes
-  void filterNodes(FilterBy? filter, value) {
-    final nodes = _nodeService.filterNodes(
-        nodes: _currentNodes.value, filter: filter, isIncome: value);
+  void filterNodes(FilterBy? filter) {
+    final nodes = _nodeService.filterNodes(filter: filter);
     _currentNodes.value = nodes;
+  }
+
+  Iterable<DatabaseNode> filterNodesByIncome(Iterable<DatabaseNode>? nodes,bool isIncome) {
+    return _nodeService.filterNodes(nodes: nodes, isIncome: isIncome);
   }
 
   Future<void> createNode({
@@ -110,15 +112,18 @@ class DatabaseService {
     await _nodeService.createNode(
         db: db,
         amount: amount,
+        userId: _userService.activeUser.id,
         catagoryId: catagoryId,
         subCatagoryId: subCatagoryId,
         isIncome: isIncome);
+    _currentNodes.value = _nodeService.allNodes;
   }
 
   Future<void> deleteNode(DatabaseNode node) async {
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     await _nodeService.deleteNode(db: db, node: node);
+    _currentNodes.value = _nodeService.allNodes;
   }
 
   // Filters

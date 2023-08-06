@@ -1,20 +1,22 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
-import 'package:my_app/constants/crud_constants.dart';
-import 'package:my_app/services/database_exceptions.dart';
-import 'package:my_app/services/database_service.dart';
-import 'package:my_app/services/filter/database_filter.dart';
-import 'package:my_app/services/node/database_node.dart';
-import 'package:my_app/services/user/database_user.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-export './user/database_user.dart';
-export './node/database_node.dart';
-export './filter/database_filter.dart';
+import 'package:my_app/constants/crud_constants.dart';
+import 'package:my_app/services/database_exceptions.dart';
+import 'package:my_app/services/database_service.dart';
+
+import 'package:my_app/services/filter/database_filter.dart';
+import 'package:my_app/services/node/database_node.dart';
+import 'package:my_app/services/user/database_user.dart';
+
+export './user/user.dart';
+export './node/node.dart';
+export './filter/filter.dart';
 
 Future<void> initialiseDatabase() async {
   // Initialise Database
@@ -57,6 +59,19 @@ int get sumBalance {
   return service.sumBalance;
 }
 
+void filterNodes(FilterBy? filter) {
+  // Get All The Nodes And Filter Them According To the parameters
+  final service = DatabaseService();
+  service.filterNodes(filter);
+}
+
+Iterable<DatabaseNode> filterNodesByIncome(
+    Iterable<DatabaseNode>? nodes, bool isIncome) {
+  // Get All The Nodes And Filter Them According To income
+  final service = DatabaseService();
+  return service.filterNodesByIncome(nodes, isIncome);
+}
+
 Future<void> createNode({
   required int amount,
   required int catagoryId,
@@ -70,6 +85,12 @@ Future<void> createNode({
       catagoryId: catagoryId,
       subCatagoryId: subCatagoryId,
       isIncome: isIncome);
+}
+
+Future<void> deleteNode(DatabaseNode node) async {
+  // Delete a Node with node object
+  final service = DatabaseService();
+  service.deleteNode(node);
 }
 
 // User Services

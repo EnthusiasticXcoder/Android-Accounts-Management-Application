@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/pages/home/widgets/node_tile.dart';
+import 'package:my_app/services/database_exceptions.dart';
 import 'package:my_app/services/services.dart';
 
 class TabListView extends StatelessWidget {
@@ -16,7 +17,8 @@ class TabListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: nodeValueNotifier,
-      builder: (context, nodes, child) {
+      builder: (context, nodes, _) {
+        nodes = filterNodesByIncome(nodes, isIncome);
         return ListView.builder(
           controller: controller,
           itemCount: nodes.length,
@@ -33,10 +35,11 @@ class TabListView extends StatelessWidget {
                 dateTime: dateTime,
                 amount: amount,
                 onDelete: () async {
-                  // try {
-                  // await _service.deleteNode(node);
-                  // } on UnableToDeleteException {
-                  // message to display
+                  try {
+                    await deleteNode(node);
+                  } on UnableToDeleteException {
+                    // message to display
+                  }
                 });
           },
         );
