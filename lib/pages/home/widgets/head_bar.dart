@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/pages/settings/view/setting_view.dart';
+import 'package:my_app/pages/settings/setting_view.dart';
 
 class Headwidget extends StatelessWidget {
   final String name;

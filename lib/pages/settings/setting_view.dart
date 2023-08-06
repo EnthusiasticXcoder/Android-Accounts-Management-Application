@@ -4,16 +4,11 @@ import 'package:my_app/pages/regester/view/regester_view.dart';
 import 'package:my_app/services/database_exceptions.dart';
 
 import 'package:my_app/services/services.dart';
-import '../widgets/widgets.dart';
+import 'widgets/widgets.dart';
 
-class SettingsView extends StatefulWidget {
+class SettingsView extends StatelessWidget {
   const SettingsView({super.key});
 
-  @override
-  State<SettingsView> createState() => _SettingsViewState();
-}
-
-class _SettingsViewState extends State<SettingsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +47,7 @@ class _SettingsViewState extends State<SettingsView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Import Button
-                  buttonTile(
+                  TileButton(
                     icon: Icons.drive_file_move_outline,
                     title: 'Import Data',
                     subtitle: const Text('Import Data From Storage'),
@@ -71,7 +66,7 @@ class _SettingsViewState extends State<SettingsView> {
                   ),
 
                   // share button
-                  buttonTile(
+                  const TileButton(
                     icon: Icons.share,
                     title: 'Share Data',
                     onPress: share,
@@ -92,29 +87,6 @@ class _SettingsViewState extends State<SettingsView> {
           ],
         ),
       ),
-    );
-  }
-
-  ListTile buttonTile({
-    required IconData icon,
-    required String title,
-    Widget? subtitle,
-    VoidCallback? onPress,
-  }) {
-    return ListTile(
-      onTap: onPress,
-      leading: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Icon(
-          icon,
-          size: 30,
-        ),
-      ),
-      title: Text(
-        title,
-        style: const TextStyle(fontSize: 16),
-      ),
-      subtitle: subtitle,
     );
   }
 }
