@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/pages/home/widgets/catagory_selector.dart';
 import 'package:my_app/services/services.dart';
-
-typedef ValueCallback = void Function(int?);
 
 class CreateNewNodeDialog extends StatefulWidget {
   const CreateNewNodeDialog({super.key, required this.isIncome});
@@ -13,10 +12,7 @@ class CreateNewNodeDialog extends StatefulWidget {
 
 class _CreateNewNodeDialogState extends State<CreateNewNodeDialog> {
   late final TextEditingController _amountController;
-
-  bool isVisible = false;
-  int? _catagory, _subCatagory;
-  List<Catagory> _subCatagoryList = [];
+  final List _catagory = [], _subcatagory = [];
 
   @override
   void initState() {
@@ -32,7 +28,6 @@ class _CreateNewNodeDialogState extends State<CreateNewNodeDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final filter = allFilters;
     return AlertDialog(
       title: Text(
         (widget.isIncome) ? 'Income' : 'Expense',
@@ -61,37 +56,11 @@ class _CreateNewNodeDialogState extends State<CreateNewNodeDialog> {
           ),
           // Margin
           const SizedBox(height: 18.0),
-          // Catagory Field
-          catagorySelector(
-            catagoryList: filter.map((element) => element.catagory),
-            value: _catagory,
-            hint: 'Catagory',
-            onselect: (int? newValue) {
-              setState(() {
-                isVisible = true;
-                _catagory = newValue;
-                _subCatagoryList = filter
-                    .firstWhere((element) => element.catagory.id == newValue)
-                    .subcatagory;
-
-                _subCatagory = null;
-              });
-            },
+          // Catagoryselector
+          CatagorySelector(
+            catagory: _catagory,
+            subcatagory: _subcatagory,
           ),
-          // Margin
-          const SizedBox(height: 8.0),
-          // sub catagory
-          Visibility(
-              visible: isVisible,
-              child: catagorySelector(
-                  value: _subCatagory,
-                  catagoryList: _subCatagoryList,
-                  hint: 'SubCatagory',
-                  onselect: (int? newValue) {
-                    setState(() {
-                      _subCatagory = newValue;
-                    });
-                  })),
         ],
       ),
       contentPadding: const EdgeInsets.only(
@@ -103,42 +72,14 @@ class _CreateNewNodeDialogState extends State<CreateNewNodeDialog> {
               if (_amountController.text.isNotEmpty) {
                 await createNode(
                   amount: int.tryParse(_amountController.text)!,
-                  catagoryId: _catagory!,
-                  subCatagoryId: _subCatagory!,
+                  catagoryId: _catagory.elementAt(0),
+                  subCatagoryId: _subcatagory.elementAt(0),
                   isIncome: (widget.isIncome) ? 1 : 0,
                 );
               }
             },
             child: const Text("Done"))
       ],
-    );
-  }
-
-  Widget catagorySelector({
-    required Iterable<Catagory> catagoryList,
-    int? value,
-    String? hint,
-    ValueCallback? onselect,
-  }) {
-    return Container(
-      width: 120,
-      padding: const EdgeInsets.symmetric(horizontal: 12.0),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8.0),
-          border: Border.all(color: Colors.blueGrey, width: 1)),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<int>(
-            value: value,
-            hint: Text((hint == null) ? '' : hint),
-            isExpanded: true,
-            dropdownColor: Colors.lightBlue.shade50,
-            borderRadius: BorderRadius.circular(22),
-            items: catagoryList
-                .map((item) => DropdownMenuItem<int>(
-                    value: item.id, child: Text(item.name)))
-                .toList(),
-            onChanged: onselect),
-      ),
     );
   }
 }
