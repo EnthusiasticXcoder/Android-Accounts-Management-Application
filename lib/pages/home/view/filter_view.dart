@@ -93,8 +93,8 @@ class FilterView extends StatelessWidget {
               const SizedBox(height: 12.0),
               // actions
               ListTile(
-                title: TextButton(onPressed: () {}, child: Text('Clear')),
-                trailing: TextButton(onPressed: () {}, child: Text('Apply')),
+                title: TextButton(onPressed: () {}, child: const Text('Clear')),
+                trailing: TextButton(onPressed: () {}, child: const Text('Apply')),
               )
             ],
           ),

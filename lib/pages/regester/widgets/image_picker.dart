@@ -50,6 +50,8 @@ void showImagePicker(BuildContext context) {
                     text: 'Camera',
                     icon: Icons.camera_alt_rounded,
                     onPress: () async {
+                      // for hiding bottom sheet
+                      Navigator.pop(context);
                       final ImagePicker picker = ImagePicker();
 
                       // Pick an image
@@ -57,9 +59,6 @@ void showImagePicker(BuildContext context) {
                           source: ImageSource.camera, imageQuality: 80);
                       if (image != null) {
                         //_image = image.path;
-
-                        // for hiding bottom sheet
-                        Navigator.pop(context);
                       }
                     }),
 
@@ -69,16 +68,15 @@ void showImagePicker(BuildContext context) {
                     text: 'Gallery',
                     icon: Icons.image_rounded,
                     onPress: () async {
+                      // for hiding bottom sheet
+                      Navigator.pop(context);
                       final ImagePicker picker = ImagePicker();
-                      
+
                       // Pick an image
                       final XFile? image = await picker.pickImage(
                           source: ImageSource.gallery, imageQuality: 80);
                       if (image != null) {
                         //_image = image.path;
-
-                        // for hiding bottom sheet
-                        Navigator.pop(context);
                       }
                     })
               ],
