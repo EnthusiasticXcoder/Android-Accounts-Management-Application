@@ -4,13 +4,11 @@ import 'package:my_app/services/services.dart';
 
 class TabListView extends StatelessWidget {
   final bool isIncome;
-  final DateTime? filter;
   final ScrollController controller;
 
   const TabListView({
     super.key,
     required this.isIncome,
-    required this.filter,
     required this.controller,
   });
 
@@ -19,7 +17,6 @@ class TabListView extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: nodeValueNotifier,
       builder: (context, nodes, child) {
-        // _service.filterNodes(filter, isIncome);
         return ListView.builder(
           controller: controller,
           itemCount: nodes.length,

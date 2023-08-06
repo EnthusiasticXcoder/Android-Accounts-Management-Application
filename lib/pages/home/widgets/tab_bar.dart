@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/pages/home/widgets/widgets.dart';
 
-
 class TabbarWidget extends StatefulWidget {
   final ScrollController verticalcontroller;
 
@@ -14,7 +13,6 @@ class TabbarWidget extends StatefulWidget {
 class _TabbarWidgetState extends State<TabbarWidget>
     with TickerProviderStateMixin {
   late final TabController _tabController;
-  DateTime? _filter;
 
   @override
   void initState() {
@@ -60,8 +58,8 @@ class _TabbarWidgetState extends State<TabbarWidget>
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            // filtur by date
-            _filterwidget(context),
+            // filter nodes
+            Filter(),
             // button to add node
             _floatingActionButton(context),
           ],
@@ -74,13 +72,11 @@ class _TabbarWidgetState extends State<TabbarWidget>
             children: <Widget>[
               // Income Tab
               TabListView(
-                filter: _filter,
                 isIncome: true,
                 controller: widget.verticalcontroller,
               ),
               // Expenditure Tab
               TabListView(
-                filter: _filter,
                 isIncome: false,
                 controller: widget.verticalcontroller,
               ),
@@ -98,63 +94,6 @@ class _TabbarWidgetState extends State<TabbarWidget>
           decoration: BoxDecoration(
               color: Colors.grey.shade300,
               borderRadius: BorderRadius.circular(12)),
-        ),
-      );
-
-  Widget _filterwidget(BuildContext context) => InkWell(
-        onTap: () async {
-          final date = await showDatePicker(
-            context: context,
-            initialDate: (_filter == null) ? DateTime.now() : _filter!,
-            firstDate: DateTime(2023),
-            lastDate: DateTime.now(),
-          );
-          if (date != null) {
-            setState(() {
-              _filter = date;
-            });
-          }
-        },
-        child: Container(
-          margin: const EdgeInsets.only(left: 15.0),
-          width: 200.0,
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(129, 227, 242, 253),
-            borderRadius: BorderRadius.circular(16.0),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black12,
-                spreadRadius: -1.0,
-                blurRadius: 10.0,
-                offset: Offset(0.0, 10.0),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // margin
-              const SizedBox(),
-              // textfield to show filter
-              Text(
-                (_filter == null)
-                    ? 'No Filter'
-                    : 'Date : ${_filter!.day}/${_filter!.month}/${_filter!.year}',
-                style: const TextStyle(fontWeight: FontWeight.w500),
-              ),
-              // clear filter button
-              IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _filter = null;
-                    });
-                  },
-                  icon: Icon(
-                    Icons.filter_alt_off_rounded,
-                    color: Colors.blue.shade500,
-                  )),
-            ],
-          ),
         ),
       );
 
