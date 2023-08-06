@@ -89,7 +89,6 @@ class _CreateNewNodeDialogState extends State<CreateNewNodeDialog> {
                   hint: 'SubCatagory',
                   onselect: (int? newValue) {
                     setState(() {
-                      isVisible = true;
                       _subCatagory = newValue;
                     });
                   })),
