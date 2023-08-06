@@ -189,8 +189,8 @@ import 'package:my_app/services/node/node_service.dart';
 class DatabaseService {
   Database? _db;
 
-  late ValueNotifier<List<DatabaseNode>> _currentNodes;
-  late ValueNotifier<DatabaseUser> _activeUser;
+  late ValueNotifier<Iterable<DatabaseNode>> _currentNodes;
+  late ValueNotifier<DatabaseUser?> _activeUser;
 
   late final UserService _userService;
   late final NodeService _nodeService;
@@ -205,14 +205,14 @@ class DatabaseService {
   }
 
   // User Variables
-  ValueNotifier<DatabaseUser> get userValueNotifier => _activeUser;
+  ValueNotifier<DatabaseUser?> get userValueNotifier => _activeUser;
   // Get Active User
   DatabaseUser get activeUser => _userService.activeUser;
   // Get All Users
   Iterable<DatabaseUser> get getAllUsers => _userService.getUsers;
 
   // Node Variables
-  ValueNotifier<List<DatabaseNode>> get nodeValueLisnable => _currentNodes;
+  ValueNotifier<Iterable<DatabaseNode>> get nodeValueLisnable => _currentNodes;
 
   int get sumIncome => _nodeService.totalIncome(_currentNodes.value);
   int get sumExpense => _nodeService.totalExpense(_currentNodes.value);
@@ -220,7 +220,7 @@ class DatabaseService {
 
   int get maxNodeAmount => _nodeService.getMaxAmount(_currentNodes.value);
 
-  List<DatabaseNode> get allNodes => _currentNodes.value;
+  Iterable<DatabaseNode> get allNodes => _currentNodes.value;
   // Users
   Future<void> createUser({
     required String username,
@@ -263,23 +263,7 @@ class DatabaseService {
   // Nodes
   List<DatabaseNode> filterNodes(DateTime? filter, value) {
     final nodes = _currentNodes.value;
-    return _nodeService.filterNodes(nodes, filter, value);
-  }
-
-  Future<void> createnode({
-    required int amount,
-    required int catagoryId,
-    required int subCatagoryId,
-    required int isIncome,
-  }) async {
-    await _ensureDbIsOpen();
-    final db = _getDatabaseOrThrow();
-    _nodeService.createNode(
-        db: db,
-        amount: amount,
-        catagoryId: catagoryId,
-        subCatagoryId: subCatagoryId,
-        isIncome: isIncome);
+    return _nodeService.filterNodes(nodes.toList(), filter, value);
   }
 
   Future<void> createNode({
@@ -362,9 +346,8 @@ class DatabaseService {
     await _nodeService.loadNodes(db: db, userId: userid);
     // load filters
     await _filterService.loadFilters(db: db, userId: userid);
-    // initialaise value notifiers
-    _currentNodes = ValueNotifier(<DatabaseNode>[]);
-    _activeUser = ValueNotifier(activeUser);
+    _activeUser.value = activeUser;
+    _currentNodes.value = _nodeService.allNodes;
   }
 
   Database _getDatabaseOrThrow() {
@@ -428,6 +411,9 @@ class DatabaseService {
 
       // create the sub catagory table
       await db.execute(subCatagoryTable);
+      // initialaise value notifiers
+      _currentNodes = ValueNotifier(<DatabaseNode>[]);
+      _activeUser = ValueNotifier(null);
     } on MissingPlatformDirectoryException {
       throw UnableToGetDocumentsDirectory();
     }

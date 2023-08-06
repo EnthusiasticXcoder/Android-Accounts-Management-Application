@@ -11,7 +11,7 @@ class NodeService {
 
   Iterable<DatabaseNode> _nodes = [];
 
-  int getMaxAmount(List<DatabaseNode> nodes) {
+  int getMaxAmount(Iterable<DatabaseNode> nodes) {
     if (nodes.isNotEmpty) {
       return nodes
           .reduce(
@@ -21,6 +21,8 @@ class NodeService {
       return 0;
     }
   }
+
+  Iterable<DatabaseNode> get allNodes => _nodes;
 
   int totalIncome(Iterable<DatabaseNode> nodes) {
     if (nodes.isNotEmpty) {
@@ -52,7 +54,7 @@ class NodeService {
     }
   }
 
-  int balance(List<DatabaseNode> nodes) {
+  int balance(Iterable<DatabaseNode> nodes) {
     if (nodes.isNotEmpty) {
       return nodes
           .map((node) => (node.isincome) ? node.amount : node.amount * (-1))
@@ -62,7 +64,8 @@ class NodeService {
     }
   }
 
-  List<DatabaseNode> filterNodes(List<DatabaseNode> nodes ,DateTime? filter, value){
+  List<DatabaseNode> filterNodes(
+      List<DatabaseNode> nodes, DateTime? filter, value) {
     if (filter == null) {
       return nodes.reversed.where((node) => node.isincome == value).toList();
     } else {

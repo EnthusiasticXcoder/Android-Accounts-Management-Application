@@ -36,7 +36,7 @@ class _SettingsViewState extends State<SettingsView> {
                   ValueListenableBuilder(
                       valueListenable: userValueNotifier,
                       builder: (context, activeUser, _) => Account(
-                            active: activeUser,
+                            active: activeUser!,
                             accounts: allUsers,
                           )),
             ),

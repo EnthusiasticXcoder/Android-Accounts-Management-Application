@@ -55,7 +55,7 @@ class _MyHomeViewState extends State<MyHomeView> {
                     valueListenable: nodeValueNotifier,
                     builder: (context, value, child) => Linegraph(
                       maxvalue: maxNodeAmount,
-                      nodes: allNodes,
+                      nodes: allNodes.toList(),
                     ),
                   ),
                 ),
@@ -76,7 +76,7 @@ class _MyHomeViewState extends State<MyHomeView> {
                     child: ValueListenableBuilder(
                   valueListenable: nodeValueNotifier,
                   builder: (context, value, child) => BarChart(
-                    nodes: allNodes,
+                    nodes: allNodes.toList(),
                   ),
                 )),
               ],
@@ -95,7 +95,7 @@ class _MyHomeViewState extends State<MyHomeView> {
           ValueListenableBuilder(
             valueListenable: userValueNotifier,
             builder: (context, activeUser, _) => Headwidget(
-              name: activeUser.name,
+              name: activeUser!.name,
               image: activeUser.imagePath,
             ),
           ),

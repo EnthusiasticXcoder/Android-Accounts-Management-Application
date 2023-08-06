@@ -57,7 +57,7 @@ int get sumBalance {
   return service.sumBalance;
 }
 
-List<DatabaseNode> get allNodes {
+Iterable<DatabaseNode> get allNodes {
   // Get All The Current active Node
   final service = DatabaseService();
   return service.allNodes;
@@ -80,7 +80,7 @@ Future<void> createNode({
 
 // User Services
 
-ValueNotifier<DatabaseUser> get userValueNotifier {
+ValueNotifier<DatabaseUser?> get userValueNotifier {
   // Get Node Value Notifier
   final service = DatabaseService();
   return service.userValueNotifier;
