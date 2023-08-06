@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/pages/home/view/display.dart';
 
-
 typedef NodeCallback = void Function();
 
 class NodeTile extends StatelessWidget {
   final bool isIncome;
-  final String description;
-  final String dateTime;
+  final String catagory, subcatagory, dateTime;
   final int amount;
   final NodeCallback onDelete;
 
   const NodeTile({
     super.key,
     required this.isIncome,
-    required this.description,
     required this.dateTime,
     required this.amount,
     required this.onDelete,
+    required this.catagory,
+    required this.subcatagory,
   });
 
   @override
@@ -37,11 +36,11 @@ class NodeTile extends StatelessWidget {
 
         // Description
         title: Text(
-          description,
+          'Catagory : $catagory\nSubCatagory : $subcatagory',
           style: const TextStyle(
             overflow: TextOverflow.ellipsis,
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
           ),
         ),
 
@@ -69,7 +68,8 @@ class NodeTile extends StatelessWidget {
             builder: (context) => DisplayMoreDialog(
               amount: amount.toString(),
               dateTime: dateTime,
-              description: description,
+              catagory: catagory,
+              subcatagory: subcatagory,
               statusColor: isIncome ? Colors.green : Colors.red,
               onDelete: onDelete,
             ),

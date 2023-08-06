@@ -13,6 +13,19 @@ class FilterService {
 
   List<Filters> get allFilters => _catagory;
 
+  List<String> getCatagoryNameById(
+      {required int catagoryId, required int subCatagoryId}) {
+    final filter =
+        _catagory.firstWhere((filter) => filter.catagory.id == catagoryId);
+
+    final catagory = filter.catagory.name;
+    
+    final subcatagory = filter.subcatagory
+        .firstWhere((element) => element.id == subCatagoryId)
+        .name;
+    return [catagory, subcatagory];
+  }
+
   Future<void> createCatagory({
     required Database db,
     required int userId,

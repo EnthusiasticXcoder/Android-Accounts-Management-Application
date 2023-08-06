@@ -97,7 +97,8 @@ class DatabaseService {
     _currentNodes.value = nodes;
   }
 
-  Iterable<DatabaseNode> filterNodesByIncome(Iterable<DatabaseNode>? nodes,bool isIncome) {
+  Iterable<DatabaseNode> filterNodesByIncome(
+      Iterable<DatabaseNode>? nodes, bool isIncome) {
     return _nodeService.filterNodes(nodes: nodes, isIncome: isIncome);
   }
 
@@ -128,6 +129,12 @@ class DatabaseService {
 
   // Filters
   List<Filters> get filters => _filterService.allFilters;
+
+  List<String> getCatagoryNameById(
+      {required int catagoryId, required int subCatagoryId}) {
+    return _filterService.getCatagoryNameById(
+        catagoryId: catagoryId, subCatagoryId: subCatagoryId);
+  }
 
   Future<void> createCatagory(
     String name,

@@ -24,16 +24,18 @@ class TabListView extends StatelessWidget {
           itemCount: nodes.length,
           itemBuilder: (context, index) {
             final node = nodes.elementAt(index);
-            int amount = node.amount;
-            String description = '${node.catogary} > ${node.subCatagory}';
+
+            final names = getCatagoryNameById(
+                catagoryId: node.catogary, subCatagoryId: node.subCatagory);
             String dateTime =
                 '${node.date}/${node.month}/${node.year} \t ${node.hour}:${node.minutes}';
 
             return NodeTile(
                 isIncome: isIncome,
-                description: description,
+                catagory: names.first,
+                subcatagory: names.last,
                 dateTime: dateTime,
-                amount: amount,
+                amount: node.amount,
                 onDelete: () async {
                   try {
                     await deleteNode(node);

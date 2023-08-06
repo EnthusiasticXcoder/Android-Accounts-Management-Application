@@ -3,17 +3,20 @@ import 'package:flutter/material.dart';
 typedef NodeCallback = void Function();
 
 class DisplayMoreDialog extends StatelessWidget {
-  final String amount, dateTime, description;
+  final String amount;
+
+  final String catagory, subcatagory, dateTime;
   final Color statusColor;
   final NodeCallback onDelete;
 
   const DisplayMoreDialog({
     required this.amount,
     required this.dateTime,
-    required this.description,
     required this.statusColor,
     required this.onDelete,
     super.key,
+    required this.catagory,
+    required this.subcatagory,
   });
 
   @override
@@ -22,54 +25,101 @@ class DisplayMoreDialog extends StatelessWidget {
       icon: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
+          // backbutton
           BackButton(
             onPressed: () => Navigator.of(context).pop(),
           ),
-          const SizedBox(),
+          // delete button
+          IconButton(
+              onPressed: () {
+                onDelete();
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(
+                Icons.delete,
+                color: Colors.redAccent,
+              )),
         ],
       ),
-      iconPadding: const EdgeInsets.only(top: 3.0),
-      title: Text(
-        description,
-        textAlign: TextAlign.justify,
-        style: const TextStyle(
-          color: Colors.blueGrey,
-          fontSize: 15,
-        ),
-      ),
-      content: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      iconPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+      contentPadding: EdgeInsets.zero,
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            amount,
-            style: TextStyle(
-              color: statusColor,
-              fontSize: 28,
-              fontWeight: FontWeight.w600,
+          // divider
+          const Divider(),
+          // Catagory label
+          ListTile(
+              leading: const Text(
+                'Catagory :',
+                style: TextStyle(
+                  color: Colors.black38,
+                ),
+              ),
+              trailing: Text(catagory,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                  ))),
+          // Subcatagory label
+          ListTile(
+            leading: const Text(
+              'SubCatagory :',
+              style: TextStyle(
+                color: Colors.black38,
+              ),
+            ),
+            trailing: Text(
+              subcatagory,
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
-          const SizedBox(width: 10),
-          Text(
-            dateTime,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Colors.black38,
+
+          // date time label
+          ListTile(
+            leading: const Text(
+              'Date Time :',
+              style: TextStyle(
+                color: Colors.black38,
+              ),
+            ),
+            trailing: Text(
+              dateTime,
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Colors.black38,
+              ),
+            ),
+          ),
+          // Amount Label
+          ListTile(
+            leading: const Text(
+              'Amount :',
+              style: TextStyle(
+                height: 0,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Colors.black38,
+              ),
+            ),
+            trailing: Text(
+              amount,
+              style: TextStyle(
+                height: 0,
+                color: statusColor,
+                fontSize: 28,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],
       ),
-      actions: <Widget>[
-        TextButton(
-            onPressed: () {
-              onDelete();
-              Navigator.of(context).pop();
-            },
-            child: const Text(
-              'Delete',
-              style: TextStyle(color: Colors.red, fontSize: 16),
-            ))
-      ],
+      actions: const [],
     );
   }
 }

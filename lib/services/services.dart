@@ -146,6 +146,14 @@ List<Filters> get allFilters {
   return service.filters;
 }
 
+List<String> getCatagoryNameById(
+    {required int catagoryId, required int subCatagoryId}) {
+  // get name of catagory and sub catagory with their id
+  final service = DatabaseService();
+  return service.getCatagoryNameById(
+      catagoryId: catagoryId, subCatagoryId: subCatagoryId);
+}
+
 Future<void> createCatagory({required String name}) async {
   // Create A new Catagory
   final service = DatabaseService();
