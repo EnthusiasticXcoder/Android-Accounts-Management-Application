@@ -73,7 +73,6 @@ class DatabaseService {
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     await _userService.changeActiveuser(db: db, user: user);
-    _activeUser.value = user;
     initialiseNodes();
   }
 

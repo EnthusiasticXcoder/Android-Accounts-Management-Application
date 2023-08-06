@@ -82,7 +82,10 @@ class SettingsView extends StatelessWidget {
                   color: Colors.white, borderRadius: BorderRadius.circular(24)),
               child:
                   // catagory
-                  CatagoryBuild(filters: allFilters),
+                  ValueListenableBuilder(
+                      valueListenable: userValueNotifier,
+                      builder: (context, __, _) =>
+                          CatagoryBuild(filters: allFilters)),
             ),
           ],
         ),
