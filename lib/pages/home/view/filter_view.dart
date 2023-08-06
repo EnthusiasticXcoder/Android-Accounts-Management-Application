@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/pages/home/widgets/catagory_selector.dart';
+import 'package:my_app/services/services.dart';
 
 class FilterView extends StatelessWidget {
-  const FilterView({
-    super.key,
-    required List catagory,
-    required List subcatagory,
-  })  : _catagory = catagory,
-        _subcatagory = subcatagory;
+  FilterView({super.key});
 
-  final List _catagory;
-  final List _subcatagory;
+  final List _catagory = [],
+      _subcatagory = [],
+      _year = [yearList.firstOrNull],
+      _month = [],
+      _date = [];
 
   @override
   Widget build(BuildContext context) {
@@ -46,45 +45,63 @@ class FilterView extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  // year selector
                   DropdownMenu(
+                    onSelected: (value) {
+                      if (_year.isNotEmpty) _year.removeLast();
+                      _year.insert(0, value);
+                    },
+                    initialSelection: yearList.firstOrNull,
                     width: MediaQuery.of(context).size.width * 0.27,
                     hintText: 'Year',
                     inputDecorationTheme: InputDecorationTheme(
                         border: OutlineInputBorder(
                             gapPadding: 0,
                             borderRadius: BorderRadius.circular(12))),
-                    dropdownMenuEntries: List.generate(
-                        3,
-                        (i) => DropdownMenuEntry(
-                            value: i + 2020, label: '${i + 2020}')),
+                    dropdownMenuEntries: yearList
+                        .map((year) =>
+                            DropdownMenuEntry(value: year, label: '$year'))
+                        .toList(),
                   ),
 
                   // Margin
                   const SizedBox(width: 12.0),
+                  // month selector
                   DropdownMenu(
+                    onSelected: (value) {
+                      if (_month.isNotEmpty) _month.removeLast();
+                      _month.insert(0, value);
+                    },
                     width: MediaQuery.of(context).size.width * 0.26,
                     hintText: 'Mon',
                     inputDecorationTheme: InputDecorationTheme(
                         border: OutlineInputBorder(
                             gapPadding: 0,
                             borderRadius: BorderRadius.circular(12))),
-                    dropdownMenuEntries: List.generate(12,
-                        (i) => DropdownMenuEntry(value: i + 1, label: 'jan')),
+                    dropdownMenuEntries: monthList
+                        .map((mon) =>
+                            DropdownMenuEntry(value: mon, label: '$mon'))
+                        .toList(),
                   ),
 
                   // Margin
                   const SizedBox(width: 12.0),
+                  // date selector
                   DropdownMenu(
+                    onSelected: (value) {
+                      if (_date.isNotEmpty) _date.removeLast();
+                      _date.insert(0, value);
+                    },
                     width: MediaQuery.of(context).size.width * 0.24,
                     hintText: 'Day',
                     inputDecorationTheme: InputDecorationTheme(
                         border: OutlineInputBorder(
                             gapPadding: 0,
                             borderRadius: BorderRadius.circular(12))),
-                    dropdownMenuEntries: List.generate(
-                        31,
-                        (i) =>
-                            DropdownMenuEntry(value: i + 1, label: '${i + 1}')),
+                    dropdownMenuEntries: dateList
+                        .map((date) =>
+                            DropdownMenuEntry(value: date, label: '$date'))
+                        .toList(),
                   ),
                 ],
               ),
@@ -93,8 +110,27 @@ class FilterView extends StatelessWidget {
               const SizedBox(height: 12.0),
               // actions
               ListTile(
-                title: TextButton(onPressed: () {}, child: const Text('Clear')),
-                trailing: TextButton(onPressed: () {}, child: const Text('Apply')),
+                title: TextButton(
+                    onPressed: () {
+                      filterNodes(null);
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Clear')),
+                trailing: TextButton(
+                    onPressed: () {
+                      if (_year.firstOrNull != null) {
+                        final filter = FilterBy(
+                            year: _year.first,
+                            month: _month.firstOrNull,
+                            date: _date.firstOrNull,
+                            catagory: _catagory.firstOrNull,
+                            subcatagory: _subcatagory.firstOrNull);
+
+                        filterNodes(filter);
+                      }
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Apply')),
               )
             ],
           ),

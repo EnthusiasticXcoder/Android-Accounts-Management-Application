@@ -12,6 +12,8 @@ class NodeService {
 
   Iterable<DatabaseNode> _nodes = [];
 
+  List<int> getdates = [], getmonths = [], getyears = [];
+
   int getMaxAmount(Iterable<DatabaseNode> nodes) {
     if (nodes.isNotEmpty) {
       return nodes
@@ -71,8 +73,7 @@ class NodeService {
     if (filter == null) {
       return nodes.toList().reversed.where((node) => node.isincome == isIncome);
     } else {
-      return nodes.where(
-          (node) => node.isincome == isIncome && node.cheackFilter(filter));
+      return nodes.where((node) => node.cheackFilter(filter));
     }
   }
 
@@ -122,6 +123,53 @@ class NodeService {
 
   Future<void> loadNodes({required Database db, required int userId}) async {
     _nodes = await getallNodes(db: db, userId: userId);
+    await getDates(db);
+  }
+
+  Future<void> getDates(Database db) async {
+    final datetime = DateTime.now();
+    // get date
+    await db
+        .query(nodetable, distinct: true, columns: [datecolumn]).then((value) {
+      final dates = value.map((element) => element.values.first as int);
+      final date = dates.firstWhere(
+        (dat) => dat == datetime.day,
+        orElse: () => -1,
+      );
+      if (date == -1) {
+        getdates = dates.followedBy([datetime.day]).toList();
+      } else {
+        getdates = dates.toList();
+      }
+    });
+    // get month
+    await db
+        .query(nodetable, distinct: true, columns: [monthcolumn]).then((value) {
+      final months = value.map((element) => element.values.first as int);
+      final month = months.firstWhere(
+        (mont) => mont == datetime.month,
+        orElse: () => -1,
+      );
+      if (month == -1) {
+        getmonths = months.followedBy([datetime.month]).toList();
+      } else {
+        getmonths = months.toList();
+      }
+    });
+    // get year
+    await db
+        .query(nodetable, distinct: true, columns: [yearcolumn]).then((value) {
+      final years = value.map((element) => element.values.first as int);
+      final year = years.firstWhere(
+        (yer) => yer == datetime.year,
+        orElse: () => -1,
+      );
+      if (year == -1) {
+        getyears = years.followedBy([datetime.year]).toList();
+      } else {
+        getyears = years.toList();
+      }
+    });
   }
 
   Future<Iterable<DatabaseNode>> getallNodes(

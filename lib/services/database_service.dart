@@ -42,6 +42,10 @@ class DatabaseService {
 
   int get maxNodeAmount => _nodeService.getMaxAmount(_currentNodes.value);
 
+  List<int> get getMonths => _nodeService.getmonths;
+  List<int> get getDates => _nodeService.getdates;
+  List<int> get getYears => _nodeService.getyears;
+
   // Users
   Future<void> createUser({
     required String username,
@@ -93,8 +97,12 @@ class DatabaseService {
 
   // Nodes
   void filterNodes(FilterBy? filter) {
-    final nodes = _nodeService.filterNodes(filter: filter);
-    _currentNodes.value = nodes;
+    if (filter == null) {
+      _currentNodes.value = _nodeService.allNodes;
+    } else {
+      final nodes = _nodeService.filterNodes(filter: filter);
+      _currentNodes.value = nodes;
+    }
   }
 
   Iterable<DatabaseNode> filterNodesByIncome(

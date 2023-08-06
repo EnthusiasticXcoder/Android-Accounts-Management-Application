@@ -59,6 +59,24 @@ int get sumBalance {
   return service.sumBalance;
 }
 
+List<int> get monthList {
+  // List of All the month value in node database
+  final service = DatabaseService();
+  return service.getMonths;
+}
+
+List<int> get yearList {
+  // List of All the year value in node database
+  final service = DatabaseService();
+  return service.getYears;
+}
+
+List<int> get dateList {
+  // List of All the dates value in node database
+  final service = DatabaseService();
+  return service.getDates;
+}
+
 void filterNodes(FilterBy? filter) {
   // Get All The Nodes And Filter Them According To the parameters
   final service = DatabaseService();

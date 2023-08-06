@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/services/services.dart';
 
 import '../view/filter_view.dart';
 
 class Filter extends StatelessWidget {
-  final List _catagory = [], _subcatagory = [];
-  Filter({super.key});
+  const Filter({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,8 +12,7 @@ class Filter extends StatelessWidget {
       onTap: () {
         showDialog(
           context: context,
-          builder: (context) =>
-              FilterView(catagory: _catagory, subcatagory: _subcatagory),
+          builder: (context) => FilterView(),
         );
       },
       child: Container(
@@ -43,7 +42,9 @@ class Filter extends StatelessWidget {
             ),
             // clear filter button
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  filterNodes(null);
+                },
                 icon: Icon(
                   Icons.filter_alt_off_rounded,
                   color: Colors.blue.shade500,
