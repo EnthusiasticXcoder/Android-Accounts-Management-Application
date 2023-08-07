@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:my_app/pages/home/home_view.dart';
-import 'package:my_app/services/services.dart';
 import '../widgets/editable_profile.dart';
+
+import 'package:my_app/utils/utils.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});

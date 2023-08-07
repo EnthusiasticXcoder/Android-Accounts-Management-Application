@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+
 import 'package:my_app/pages/regester/view/regester_view.dart';
 import 'package:my_app/pages/regester/widgets/editable_profile.dart';
-import 'package:my_app/services/database_exceptions.dart';
-import 'package:my_app/services/services.dart'
-    show DatabaseUser, updateUser, deleteUser;
+
+import 'package:my_app/utils/utils.dart';
+
+
 
 typedef SaveCallback = void Function(String?);
 

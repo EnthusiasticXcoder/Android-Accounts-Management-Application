@@ -54,7 +54,7 @@ class UserService {
     if (numberofdelete != 1) {
       throw UnableToDeleteException();
     } else {
-      _users.where((element) => element.id != id);
+      _users = _users.where((element) => element.id != id);
       if (_users.isEmpty) {
         throw AllUserDeleted();
       }

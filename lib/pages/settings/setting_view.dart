@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:my_app/pages/home/home_view.dart';
 import 'package:my_app/pages/regester/view/regester_view.dart';
-import 'package:my_app/services/database_exceptions.dart';
 
-import 'package:my_app/services/services.dart';
+import 'package:my_app/utils/utils.dart';
 import 'widgets/widgets.dart';
 
 class SettingsView extends StatelessWidget {

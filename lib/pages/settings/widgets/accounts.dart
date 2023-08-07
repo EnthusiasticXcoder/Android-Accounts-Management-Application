@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:my_app/pages/regester/view/regester_view.dart';
 import 'package:my_app/pages/settings/view/profile.dart';
+import 'package:my_app/utils/utils.dart';
 
-import 'package:my_app/services/services.dart'
-    show changeActiveUser, DatabaseUser;
 
 class Account extends StatefulWidget {
   final Iterable<DatabaseUser> accounts;

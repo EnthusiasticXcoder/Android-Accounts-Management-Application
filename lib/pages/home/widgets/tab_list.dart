@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:my_app/pages/home/widgets/node_tile.dart';
-import 'package:my_app/services/database_exceptions.dart';
-import 'package:my_app/services/services.dart';
+import 'package:my_app/utils/utils.dart';
 
 class TabListView extends StatelessWidget {
   final bool isIncome;

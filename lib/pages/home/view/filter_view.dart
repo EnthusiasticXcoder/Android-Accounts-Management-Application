@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+
 import 'package:my_app/pages/home/widgets/catagory_selector.dart';
-import 'package:my_app/services/services.dart';
+import 'package:my_app/utils/utils.dart';
 
 class FilterView extends StatelessWidget {
-  FilterView({super.key});
+  const FilterView(
+      {super.key,
+      required this.catagory,
+      required this.subcatagory,
+      required this.year,
+      required this.month,
+      required this.date});
 
-  final List _catagory = [],
-      _subcatagory = [],
-      _year = [yearList.firstOrNull],
-      _month = [],
-      _date = [];
+  final List catagory, subcatagory, year, month, date;
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +38,8 @@ class FilterView extends StatelessWidget {
               const SizedBox(height: 18.0),
               // Catagoryselector
               CatagorySelector(
-                catagory: _catagory,
-                subcatagory: _subcatagory,
+                catagory: catagory,
+                subcatagory: subcatagory,
                 isVisible: true,
               ),
 
@@ -48,8 +51,8 @@ class FilterView extends StatelessWidget {
                   // year selector
                   DropdownMenu(
                     onSelected: (value) {
-                      if (_year.isNotEmpty) _year.removeLast();
-                      _year.insert(0, value);
+                      if (year.isNotEmpty) year.removeLast();
+                      year.insert(0, value);
                     },
                     initialSelection: yearList.firstOrNull,
                     width: MediaQuery.of(context).size.width * 0.27,
@@ -69,8 +72,8 @@ class FilterView extends StatelessWidget {
                   // month selector
                   DropdownMenu(
                     onSelected: (value) {
-                      if (_month.isNotEmpty) _month.removeLast();
-                      _month.insert(0, value);
+                      if (month.isNotEmpty) month.removeLast();
+                      month.insert(0, value);
                     },
                     width: MediaQuery.of(context).size.width * 0.26,
                     hintText: 'Mon',
@@ -89,8 +92,8 @@ class FilterView extends StatelessWidget {
                   // date selector
                   DropdownMenu(
                     onSelected: (value) {
-                      if (_date.isNotEmpty) _date.removeLast();
-                      _date.insert(0, value);
+                      if (date.isNotEmpty) date.removeLast();
+                      date.insert(0, value);
                     },
                     width: MediaQuery.of(context).size.width * 0.24,
                     hintText: 'Day',
@@ -112,19 +115,24 @@ class FilterView extends StatelessWidget {
               ListTile(
                 title: TextButton(
                     onPressed: () {
+                      if (catagory.isNotEmpty) catagory.removeLast();
+                      if (subcatagory.isNotEmpty) subcatagory.removeLast();
+                      if (date.isNotEmpty) date.removeLast();
+                      if (month.isNotEmpty) month.removeLast();
+                      if (year.isNotEmpty) year.removeLast();
                       filterNodes(null);
                       Navigator.of(context).pop();
                     },
                     child: const Text('Clear')),
                 trailing: TextButton(
                     onPressed: () {
-                      if (_year.firstOrNull != null) {
+                      if (year.firstOrNull != null) {
                         final filter = FilterBy(
-                            year: _year.first,
-                            month: _month.firstOrNull,
-                            date: _date.firstOrNull,
-                            catagory: _catagory.firstOrNull,
-                            subcatagory: _subcatagory.firstOrNull);
+                            year: year.first,
+                            month: month.firstOrNull,
+                            date: date.firstOrNull,
+                            catagory: catagory.firstOrNull,
+                            subcatagory: subcatagory.firstOrNull);
 
                         filterNodes(filter);
                       }

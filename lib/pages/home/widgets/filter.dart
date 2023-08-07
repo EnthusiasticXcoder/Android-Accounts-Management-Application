@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/services/services.dart';
 
 import '../view/filter_view.dart';
+import 'package:my_app/utils/utils.dart';
+
 
 class Filter extends StatelessWidget {
-  const Filter({super.key});
+  Filter({super.key});
+
+  final List _catagory = [],
+      _subcatagory = [],
+      _year = [yearList.firstOrNull],
+      _month = [],
+      _date = [];
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +19,12 @@ class Filter extends StatelessWidget {
       onTap: () {
         showDialog(
           context: context,
-          builder: (context) => FilterView(),
+          builder: (context) => FilterView(
+              catagory: _catagory,
+              subcatagory: _subcatagory,
+              year: _year,
+              month: _month,
+              date: _date),
         );
       },
       child: Container(
@@ -36,13 +48,34 @@ class Filter extends StatelessWidget {
             // margin
             const SizedBox(),
             // textfield to show filter
-            const Text(
-              'No Filter',
-              style: TextStyle(fontWeight: FontWeight.w500),
-            ),
+            ValueListenableBuilder(
+                valueListenable: nodeValueNotifier,
+                builder: (context, __, _) {
+                  List text = [];
+                  if (_catagory.isNotEmpty) text.add(' Catagory');
+                  if (_subcatagory.isNotEmpty) text.add(' Subcatagory');
+                  if (_month.isNotEmpty) text.add('Date');
+                  String value = 'No Filter';
+                  if (text.isNotEmpty) {
+                    value = 'Filter By : ${text.first}';
+                  }
+                  return SizedBox(
+                    width: 100,
+                    child: Text(
+                      value,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                  );
+                }),
             // clear filter button
             IconButton(
                 onPressed: () {
+                  if (_catagory.isNotEmpty) _catagory.removeLast();
+                  if (_subcatagory.isNotEmpty) _subcatagory.removeLast();
+                  if (_date.isNotEmpty) _date.removeLast();
+                  if (_month.isNotEmpty) _month.removeLast();
+                  if (_year.isNotEmpty) _year.removeLast();
                   filterNodes(null);
                 },
                 icon: Icon(

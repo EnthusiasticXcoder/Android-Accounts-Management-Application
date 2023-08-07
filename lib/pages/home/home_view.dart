@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/services/services.dart';
 
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+import 'package:my_app/utils/utils.dart';
 import 'package:my_app/pages/home/widgets/widgets.dart';
 
 class MyHomeView extends StatefulWidget {
