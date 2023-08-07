@@ -20,17 +20,9 @@ class BarChart extends StatelessWidget {
           zoomMode: ZoomMode.x,
           maximumZoomLevel: 0.25,
         ),
-        primaryXAxis: DateTimeCategoryAxis(
+        primaryXAxis: CategoryAxis(
           maximumLabels: 12,
           majorGridLines: const MajorGridLines(width: 0.0),
-          axisLabelFormatter: (axisLabelRenderArgs) {
-            final text = axisLabelRenderArgs.text.split(' ')[0];
-            const style = TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w500,
-            );
-            return ChartAxisLabel(text, style);
-          },
         ),
         primaryYAxis: NumericAxis(
           axisLabelFormatter: (axisLabelRenderArgs) {
@@ -56,17 +48,17 @@ class BarChart extends StatelessWidget {
     );
   }
 
-  ColumnSeries<List, DateTime> plotBargraph(bool isIncome) {
+  ColumnSeries<List, String> plotBargraph(bool isIncome) {
     final List<List> incomenodes = filterPlotData(isIncome);
 
-    return ColumnSeries<List, DateTime>(
+    return ColumnSeries<List, String>(
       opacity: 0.9,
       color: (isIncome) ? Colors.green.shade800 : Colors.red.shade600,
       borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(6.0), topRight: Radius.circular(6.0)),
       dataSource: incomenodes,
-      xValueMapper: (List node, _) => DateTime(2023, node[0]),
-      yValueMapper: (List node, _) => node[1],
+      xValueMapper: (List node, _) => node.elementAt(0),
+      yValueMapper: (List node, _) => node.elementAt(1),
     );
   }
 
@@ -87,9 +79,9 @@ class BarChart extends StatelessWidget {
     }
     List<List> data = [];
     monthlySum.forEach((key, value) {
-      data.add([key, value]);
+      final month = monlist.elementAt(key - 1);
+      data.add([month, value]);
     });
-
     return data;
   }
 
@@ -103,3 +95,18 @@ class BarChart extends StatelessWidget {
     }
   }
 }
+
+const monlist = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec'
+];
