@@ -100,7 +100,6 @@ class _MainViewState extends State<MainView>
                 if (state is NodeStateUserExist) {
                   return Headwidget(
                     name: state.currentUser.name,
-                    image: state.currentUser.imagePath,
                     navigate: () {
                       Navigator.of(context).pushNamed(AppRouts.settingspage);
                     },

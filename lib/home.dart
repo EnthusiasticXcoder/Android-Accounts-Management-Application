@@ -27,7 +27,7 @@ class HomePage extends StatelessWidget {
         }
       },
       buildWhen: (previous, current) =>
-          !(previous is NodeStateUserExist && current is NodeStateUserExist) ||
+          //!(previous is NodeStateUserExist && current is NodeStateUserExist) ||
           current is! NodeLoadingState,
       builder: (context, state) {
         if (state is NodeStateCreateUser) {

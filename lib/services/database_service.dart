@@ -48,7 +48,6 @@ class DatabaseService {
   Future<void> createUser({
     required String username,
     required String info,
-    String? imagePath,
   }) async {
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
@@ -56,7 +55,6 @@ class DatabaseService {
       db: db,
       username: username,
       info: info,
-      imagePath: imagePath,
     );
     await changeActiveUser(newUser);
   }
@@ -82,7 +80,6 @@ class DatabaseService {
     final values = {
       namecolumn: (name != null) ? name : activeUser.name,
       infocolumn: (info != null) ? info : activeUser.info,
-      imageColumn: (imagePath != null) ? imagePath : activeUser.imagePath,
       isactivecolumn: 1
     };
 

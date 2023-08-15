@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 
 class Headwidget extends StatelessWidget {
   final String name;
-  final String? image;
   final VoidCallback navigate;
   const Headwidget({
     super.key,
     required this.name,
-    this.image,
     required this.navigate,
   });
 
@@ -31,7 +29,6 @@ class Headwidget extends StatelessWidget {
           Hero(
             tag: 'Active User',
             child: CircleAvatar(
-              foregroundImage: (image == null) ? null : AssetImage(image!),
               child: IconButton(
                 onPressed: navigate,
                 icon: const Icon(Icons.person),

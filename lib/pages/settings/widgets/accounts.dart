@@ -38,12 +38,9 @@ class _AccountState extends State<Account> {
         tag: 'Active User',
         child: GestureDetector(
           onTap: widget.showProfile,
-          child: CircleAvatar(
+          child: const CircleAvatar(
               radius: 40,
-              foregroundImage: (widget.active.imagePath == null)
-                  ? null
-                  : AssetImage(widget.active.imagePath!),
-              child: const Icon(
+              child: Icon(
                 Icons.person,
                 size: 40.0,
               )),
@@ -76,11 +73,7 @@ class _AccountState extends State<Account> {
                         );
                     _controller.collapse();
                   },
-                  leading: CircleAvatar(
-                      foregroundImage: (user.imagePath == null)
-                          ? null
-                          : AssetImage(user.imagePath!),
-                      child: const Icon(Icons.person)),
+                  leading: const CircleAvatar(child: Icon(Icons.person)),
                   title: Text(user.name),
                   subtitle: Text(user.info),
                 ),

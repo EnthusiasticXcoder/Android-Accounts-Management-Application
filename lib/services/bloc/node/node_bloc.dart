@@ -10,6 +10,8 @@ class NodeBloc extends Bloc<NodeEvent, NodeState> {
           emit(const NodeLoadingState(true));
           await service.initialiseUser();
         } on NoUsersFoundinDatabase {
+          // stop Loading
+          emit(const NodeLoadingState(false));
           emit(const NodeStateCreateUser());
           return;
         }
@@ -35,7 +37,6 @@ class NodeBloc extends Bloc<NodeEvent, NodeState> {
         await service.createUser(
           username: event.username,
           info: event.info,
-          imagePath: event.imagePath,
         );
 
         await service.initialiseNodes();
@@ -92,7 +93,7 @@ class NodeBloc extends Bloc<NodeEvent, NodeState> {
       emit(const NodeLoadingState(true));
 
       await service.updateUser(
-        id: event.id,
+        id: service.currentUser.id,
         imagePath: event.imagePath,
         info: event.info,
         name: event.name,

@@ -14,13 +14,12 @@ class RegisterView extends StatefulWidget {
 class _RegisterViewState extends State<RegisterView> {
   late final TextEditingController _nameController;
   late final TextEditingController _infoController;
-  late final ValueNotifier _imagePath;
 
   @override
   void initState() {
     _nameController = TextEditingController();
     _infoController = TextEditingController();
-    _imagePath = ValueNotifier(null);
+
     super.initState();
   }
 
@@ -28,7 +27,7 @@ class _RegisterViewState extends State<RegisterView> {
   void dispose() {
     _nameController.dispose();
     _infoController.dispose();
-    _imagePath.dispose();
+
     super.dispose();
   }
 
@@ -87,13 +86,12 @@ class _RegisterViewState extends State<RegisterView> {
                     onPress: () {
                       final userName = _nameController.text.toString();
                       final info = _infoController.text.toString();
-                      final imagePath = _imagePath.value;
+
                       // Create User event
                       context.read<NodeBloc>().add(
                             NodeEventCreateUser(
                               username: userName,
                               info: info,
-                              imagePath: imagePath,
                             ),
                           );
                       _nameController.clear();
@@ -110,8 +108,16 @@ class _RegisterViewState extends State<RegisterView> {
             Positioned(
               top: MediaQuery.of(context).size.height * 0.10,
               right: MediaQuery.of(context).size.width * 0.05,
-              child: EditableProfile(
-                imagePath: _imagePath,
+              child: Hero(
+                tag: 'Active User',
+                child: CircleAvatar(
+                  backgroundColor: Colors.blueGrey.withAlpha(240),
+                  radius: 90.0,
+                  child: const Icon(
+                    Icons.person,
+                    size: 130.0,
+                  ),
+                ),
               ),
             ),
           ],

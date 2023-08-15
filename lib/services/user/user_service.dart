@@ -5,33 +5,23 @@ import 'package:my_app/services/user/database_user.dart';
 import '../database_exceptions.dart';
 
 class UserService {
-  
   Iterable<DatabaseUser> _users = [];
   DatabaseUser? _activeUser;
 
   DatabaseUser get activeUser => _activeUser!;
   Iterable<DatabaseUser> get getUsers => _users;
 
-  Future<DatabaseUser> createUser(
-      {required Database db,
-      required String username,
-      required String info,
-      String? imagePath}) async {
+  Future<DatabaseUser> createUser({
+    required Database db,
+    required String username,
+    required String info,
+  }) async {
     final id = await db.insert(
       usertable,
-      {
-        namecolumn: username,
-        infocolumn: info,
-        imageColumn: imagePath,
-        isactivecolumn: 1
-      },
+      {namecolumn: username, infocolumn: info, isactivecolumn: 1},
     );
-    final newUser = DatabaseUser(
-        id: id,
-        name: username,
-        info: info,
-        imagePath: imagePath,
-        isactive: true);
+    final newUser =
+        DatabaseUser(id: id, name: username, info: info, isactive: true);
 
     _users.map((user) {
       user.isactive = false;
@@ -59,7 +49,7 @@ class UserService {
   }
 
   Future<void> updateUser(
-      {required Database db, required Map<String, Object?> values}) async {
+      {required Database db, required Map<String, Object> values}) async {
     final updatesCount = await db.update(
       usertable,
       values,

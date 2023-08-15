@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:my_app/pages/regester/widgets/editable_profile.dart';
 import 'package:my_app/pages/settings/widgets/should_delete.dart';
 import 'package:my_app/services/services.dart';
 
@@ -68,14 +67,10 @@ class ProfilePage extends StatelessWidget {
                       formKey: _formKey,
                       onSave: (newValue) async {
                         if (newValue != activeuser.name) {
-                          final id = activeuser.id;
                           final name = newValue;
                           // update user's Name
                           context.read<NodeBloc>().add(
-                                NodeEventUpdateUser(
-                                  id: id,
-                                  name: name,
-                                ),
+                                NodeEventUpdateUser(name: name),
                               );
                         }
                       },
@@ -93,14 +88,10 @@ class ProfilePage extends StatelessWidget {
                       formKey: _formKey,
                       onSave: (newValue) async {
                         if (newValue != activeuser.info) {
-                          final id = activeuser.id;
                           final info = newValue;
                           // update user's Name
                           context.read<NodeBloc>().add(
-                                NodeEventUpdateUser(
-                                  id: id,
-                                  info: info,
-                                ),
+                                NodeEventUpdateUser(info: info),
                               );
                         }
                       },
@@ -118,8 +109,18 @@ class ProfilePage extends StatelessWidget {
             Positioned(
               top: height * 0.14,
               right: width * 0.05,
-              child: const EditableProfile(),
-            ),
+              child: Hero(
+                tag: 'Active User',
+                child: CircleAvatar(
+                  backgroundColor: Colors.blueGrey.withAlpha(240),
+                  radius: 90.0,
+                  child: const Icon(
+                    Icons.person,
+                    size: 130.0,
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),

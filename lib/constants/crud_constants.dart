@@ -28,7 +28,6 @@ const userTable = '''CREATE TABLE IF NOT EXISTS "user" (
 	"id"	INTEGER NOT NULL UNIQUE,
 	"UserName"	TEXT NOT NULL,
 	"Info"	TEXT NOT NULL,
-	"ImagePath"	TEXT,
 	"IsActive"	INTEGER NOT NULL,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );''';
@@ -63,7 +62,6 @@ const isIncomecolumn = 'IsIncome';
 
 const namecolumn = 'UserName';
 const infocolumn = 'Info';
-const imageColumn = 'ImagePath';
 const isactivecolumn = 'IsActive';
 
 const catagorynamecolumn = 'CatagoryName';
