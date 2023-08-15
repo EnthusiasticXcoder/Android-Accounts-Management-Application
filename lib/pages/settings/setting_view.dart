@@ -51,14 +51,12 @@ class SettingsView extends StatelessWidget {
                 margin: EdgeInsets.symmetric(horizontal: width * 0.04),
                 padding: EdgeInsets.symmetric(
                   vertical: height * 0.01,
-                  horizontal: width * 0.03,
                 ),
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(24)),
-                child:
-                    // profile
-                    BlocBuilder<NodeBloc, NodeState>(
+                // profile
+                child: BlocBuilder<NodeBloc, NodeState>(
                   buildWhen: (previous, current) =>
                       current is NodeStateUserExist,
                   builder: (context, state) {
