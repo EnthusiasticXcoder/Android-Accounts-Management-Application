@@ -24,8 +24,13 @@ void showImagePicker(BuildContext context) {
 
             //pick profile picture label
             ListTile(
-              title: const Text('Pick Profile Picture',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400)),
+              title: const Text(
+                'Pick Profile Picture',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
               trailing: IconButton(
                   // Function to Remove Profile Pic
                   onPressed: () {

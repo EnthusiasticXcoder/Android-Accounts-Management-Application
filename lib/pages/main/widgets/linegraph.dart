@@ -6,13 +6,17 @@ class Linegraph extends StatelessWidget {
   final Iterable<DatabaseNode> nodes;
   final int maxvalue;
 
-  const Linegraph({super.key, required this.nodes, required this.maxvalue,});
+  const Linegraph({
+    super.key,
+    required this.nodes,
+    required this.maxvalue,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 3.0),
-      height: 150,
+      height: MediaQuery.of(context).size.height * 0.15,
       child: SfCartesianChart(
         zoomPanBehavior: ZoomPanBehavior(
           enablePinching: true,
@@ -37,7 +41,6 @@ class Linegraph extends StatelessWidget {
               fontWeight: FontWeight.w500,
             )),
         series: <ChartSeries>[
-
           // Ploating income graph
           plotLinegraph(true),
           plotAreagraph(true),

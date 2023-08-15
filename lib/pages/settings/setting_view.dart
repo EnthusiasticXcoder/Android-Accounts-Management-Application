@@ -12,6 +12,9 @@ class SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.sizeOf(context).height;
+
+    final width = MediaQuery.sizeOf(context).width;
     return MultiBlocListener(
       listeners: [
         BlocListener<NodeBloc, NodeState>(
@@ -42,12 +45,14 @@ class SettingsView extends StatelessWidget {
           child: Column(
             children: [
               // margin
-              const SizedBox(height: 30),
+              SizedBox(height: height * 0.04),
               // Profile settings
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16.0),
-                padding:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+                margin: EdgeInsets.symmetric(horizontal: width * 0.04),
+                padding: EdgeInsets.symmetric(
+                  vertical: height * 0.01,
+                  horizontal: width * 0.03,
+                ),
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(24)),
@@ -81,9 +86,11 @@ class SettingsView extends StatelessWidget {
 
               // other settings
               Container(
-                margin:
-                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                margin: EdgeInsets.symmetric(
+                  vertical: height * 0.01,
+                  horizontal: width * 0.04,
+                ),
+                padding: EdgeInsets.symmetric(vertical: height * 0.02),
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(24)),
@@ -116,8 +123,8 @@ class SettingsView extends StatelessWidget {
               ),
               // catagory config
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16.0),
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                margin: EdgeInsets.symmetric(horizontal: width * 0.04),
+                padding: EdgeInsets.symmetric(vertical: height * 0.01),
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(24)),

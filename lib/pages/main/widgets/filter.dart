@@ -21,8 +21,8 @@ class Filter extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.only(left: 15.0),
-        width: 200.0,
+        margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.05),
+        width: MediaQuery.of(context).size.width * 0.5,
         decoration: BoxDecoration(
           color: const Color.fromARGB(129, 227, 242, 253),
           borderRadius: BorderRadius.circular(16.0),

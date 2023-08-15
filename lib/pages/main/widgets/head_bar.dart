@@ -13,34 +13,32 @@ class Headwidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        margin: const EdgeInsets.all(25.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // Name display
-            Text(
-              'Hi, $name!',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 6.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Name display
+          Text(
+            'Hi, $name!',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          // user circular avatar
+          Hero(
+            tag: 'Active User',
+            child: CircleAvatar(
+              foregroundImage: (image == null) ? null : AssetImage(image!),
+              child: IconButton(
+                onPressed: navigate,
+                icon: const Icon(Icons.person),
               ),
             ),
-            // user circular avatar
-            Hero(
-              tag: 'Active User',
-              child: CircleAvatar(
-                foregroundImage: (image == null) ? null : AssetImage(image!),
-                child: IconButton(
-                  onPressed: navigate,
-                  icon: const Icon(Icons.person),
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

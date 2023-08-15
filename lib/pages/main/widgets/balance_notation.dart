@@ -13,6 +13,7 @@ class BalanceNotationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const SizedBox(height: 8.0),
         // Total Income and expense widgets

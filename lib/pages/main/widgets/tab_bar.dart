@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_app/services/services.dart';
 
-
 class TabbarWidget extends StatelessWidget {
   final List<String> tabs;
   final List<Widget> tabviews;
@@ -19,17 +18,18 @@ class TabbarWidget extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.sizeOf(context).height;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
         // Upper Margin
-        const SizedBox(height: 12),
+        SizedBox(height: height * 0.02),
 
         // Upper Nauch of Sliding Pannel
         _uppernauchwidget(context),
 
         // Bottom Margin of Upper Nauch
-        const SizedBox(height: 6),
+        SizedBox(height: height * 0.01),
 
         // TabBar Tab creation widget
         TabBar(
@@ -49,10 +49,10 @@ class TabbarWidget extends StatelessWidget {
             // filter nodes
             filter,
             // button to add node
-            _floatingActionButton(context),
+            _floatingActionButton(context, height * 0.02),
           ],
         ),
-
+        SizedBox(height: height * 0.01),
         // TabBar View Widget Associated With Each Tab
         Expanded(
           child: TabBarView(
@@ -74,11 +74,11 @@ class TabbarWidget extends StatelessWidget {
         ),
       );
 
-  Widget _floatingActionButton(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(
-          right: 18,
-          top: 18,
-          bottom: 12,
+  Widget _floatingActionButton(BuildContext context, double height) => Padding(
+        padding: EdgeInsets.only(
+          right: height,
+          top: height,
+          bottom: height * 0.5,
         ),
         child: FloatingActionButton(
           onPressed: () {

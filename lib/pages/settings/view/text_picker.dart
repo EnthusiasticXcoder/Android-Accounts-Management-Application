@@ -4,6 +4,8 @@ Future<String?> showTextPicker(BuildContext context) async {
   String? text;
 
   final controller = TextEditingController();
+
+  final size = MediaQuery.sizeOf(context);
   await showDialog(
     builder: (context) {
       return AlertDialog(
@@ -11,8 +13,11 @@ Future<String?> showTextPicker(BuildContext context) async {
           'Enter Catagory Name',
           style: TextStyle(fontSize: 18),
         ),
-        contentPadding: const EdgeInsets.only(
-            top: 50.0, left: 18.0, right: 18.0, bottom: 24.0),
+        contentPadding: EdgeInsets.only(
+            top: size.height * 0.065,
+            left: size.width * 0.05,
+            right: size.width * 0.05,
+            bottom: size.height * 0.04),
         content: Form(
           autovalidateMode: AutovalidateMode.onUserInteraction,
           child: TextFormField(
@@ -20,7 +25,8 @@ Future<String?> showTextPicker(BuildContext context) async {
             controller: controller,
             validator: (value) => (value!.isEmpty) ? 'Required Field' : null,
             decoration: InputDecoration(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 8.0),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: size.width * 0.01),
                 hintText: 'Catagory Name...',
                 border: OutlineInputBorder(
                     gapPadding: 0, borderRadius: BorderRadius.circular(12))),

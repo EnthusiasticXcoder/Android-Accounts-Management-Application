@@ -6,38 +6,30 @@ class PageBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Container(
-          margin: const EdgeInsets.all(4.0),
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              colors: [
-                Color.fromARGB(150, 3, 126, 214),
-                Color.fromARGB(19, 7, 115, 255),
-                Color.fromARGB(150, 3, 78, 208),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(16.0),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black12,
-                spreadRadius: -1.0,
-                blurRadius: 10.0,
-                offset: Offset(0.0, 10.0),
-              ),
-            ],
-          ),
-          child: child,
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.1,
+      margin: const EdgeInsets.all(4.0),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [
+            Color.fromARGB(150, 3, 126, 214),
+            Color.fromARGB(19, 7, 115, 255),
+            Color.fromARGB(150, 3, 78, 208),
+          ],
         ),
-
-        // Lower Margin
-        const SizedBox(height: 300),
-      ],
+        borderRadius: BorderRadius.circular(16.0),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            spreadRadius: -1.0,
+            blurRadius: 10.0,
+            offset: Offset(0.0, 10.0),
+          ),
+        ],
+      ),
+      child: child,
     );
   }
 }
