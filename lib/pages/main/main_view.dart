@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_app/helpers/shaders/light_gradient.dart';
 import 'package:my_app/pages/routing/app_routs.dart';
 import 'package:my_app/services/services.dart';
 
@@ -84,22 +85,40 @@ class _MainViewState extends State<MainView>
               () => context.read<MainBloc>().add(const MainEventHideDialog()));
         }
       },
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Stack(
-          children: <Widget>[
-            Container(
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                Color.fromARGB(255, 79, 194, 248),
-                Color.fromARGB(255, 41, 208, 246),
-                Color.fromARGB(223, 130, 196, 250),
-              ])),
+      child: CustomPaint(
+        painter: LightGradient(),
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: Colors.transparent,
+          // Header Widget
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            toolbarHeight: MediaQuery.of(context).size.height * 0.08,
+            backgroundColor: Colors.transparent,
+            title: BlocBuilder<NodeBloc, NodeState>(
+              builder: (context, state) {
+                if (state is NodeStateUserExist) {
+                  return Headwidget(
+                    name: state.currentUser.name,
+                    image: state.currentUser.imagePath,
+                    navigate: () {
+                      Navigator.of(context).pushNamed(AppRouts.settingspage);
+                    },
+                  );
+                } else {
+                  return Container();
+                }
+              },
             ),
-
-            // Bottom Sliding Pannel
-            SlidingUpPanel(
-              body: PageView(
+          ),
+          // Bottom Sliding Pannel
+          body: SlidingUpPanel(
+            body: Padding(
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height * 0.025,
+                bottom: MediaQuery.of(context).size.height * 0.7,
+              ),
+              child: PageView(
                 controller: _pageController,
                 children: <Widget>[
                   // linggraph plot
@@ -155,56 +174,36 @@ class _MainViewState extends State<MainView>
                   )),
                 ],
               ),
-              parallaxEnabled: true,
-              parallaxOffset: 0.8,
-              panelBuilder: (scrollcontroller) {
-                return TabbarWidget(
-                  tabController: _tabController,
-                  filter: Filter(
-                    onTap: () {
-                      // open FIlter Dialog
-                      context
-                          .read<MainBloc>()
-                          .add(const MainEventFilteringNode());
-                    },
-                    catagory: _catagory,
-                    date: _date,
-                    month: _month,
-                    subcatagory: _subcatagory,
-                    year: _year,
-                  ),
-                  tabs: const ['Income', 'Expendeture'],
-                  tabviews: <Widget>[
-                    // List of Income Nodes
-                    TabListView(isIncome: true, controller: scrollcontroller),
-                    // List of Expense Nodes
-                    TabListView(isIncome: false, controller: scrollcontroller),
-                  ],
-                );
-              },
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(25)),
-              minHeight: MediaQuery.of(context).size.height * 0.55,
-              maxHeight: MediaQuery.of(context).size.height * 0.68,
             ),
-
-            // Header Widget
-            BlocBuilder<NodeBloc, NodeState>(
-              builder: (context, state) {
-                if (state is NodeStateUserExist) {
-                  return Headwidget(
-                    name: state.currentUser.name,
-                    image: state.currentUser.imagePath,
-                    navigate: () {
-                      Navigator.of(context).pushNamed(AppRouts.settingspage);
-                    },
-                  );
-                } else {
-                  return Container();
-                }
-              },
-            )
-          ],
+            panelBuilder: (scrollcontroller) {
+              return TabbarWidget(
+                tabController: _tabController,
+                filter: Filter(
+                  onTap: () {
+                    // open FIlter Dialog
+                    context
+                        .read<MainBloc>()
+                        .add(const MainEventFilteringNode());
+                  },
+                  catagory: _catagory,
+                  date: _date,
+                  month: _month,
+                  subcatagory: _subcatagory,
+                  year: _year,
+                ),
+                tabs: const ['Income', 'Expendeture'],
+                tabviews: <Widget>[
+                  // List of Income Nodes
+                  TabListView(isIncome: true, controller: scrollcontroller),
+                  // List of Expense Nodes
+                  TabListView(isIncome: false, controller: scrollcontroller),
+                ],
+              );
+            },
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
+            minHeight: MediaQuery.of(context).size.height * 0.5,
+            maxHeight: MediaQuery.of(context).size.height * 0.87,
+          ),
         ),
       ),
     );
