@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:my_app/pages/home/widgets/catagory_selector.dart';
-import 'package:my_app/utils/utils.dart';
+import 'package:my_app/pages/main/widgets/catagory_selector.dart';
+import 'package:my_app/services/services.dart';
 
 class FilterView extends StatelessWidget {
-  const FilterView(
-      {super.key,
-      required this.catagory,
-      required this.subcatagory,
-      required this.year,
-      required this.month,
-      required this.date});
+  final List<int> yearList;
+  final List<int> dateList;
+  final List<int> monthList;
+  const FilterView({
+    super.key,
+    required this.catagory,
+    required this.subcatagory,
+    required this.year,
+    required this.month,
+    required this.date,
+    required this.yearList,
+    required this.dateList,
+    required this.monthList,
+  });
 
   final List catagory, subcatagory, year, month, date;
 
@@ -120,7 +128,10 @@ class FilterView extends StatelessWidget {
                       if (date.isNotEmpty) date.removeLast();
                       if (month.isNotEmpty) month.removeLast();
                       if (year.isNotEmpty) year.removeLast();
-                      filterNodes(null);
+                      context
+                          .read<MainBloc>()
+                          .add(const MainEventFilterNode(null));
+
                       Navigator.of(context).pop();
                     },
                     child: const Text('Clear')),
@@ -134,7 +145,9 @@ class FilterView extends StatelessWidget {
                             catagory: catagory.firstOrNull,
                             subcatagory: subcatagory.firstOrNull);
 
-                        filterNodes(filter);
+                        context
+                            .read<MainBloc>()
+                            .add(MainEventFilterNode(filter));
                       }
                       Navigator.of(context).pop();
                     },

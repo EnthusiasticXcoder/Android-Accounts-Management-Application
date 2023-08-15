@@ -3,7 +3,7 @@ import 'package:my_app/services/node/database_node.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class BarChart extends StatelessWidget {
-  final List<DatabaseNode> nodes;
+  final Iterable<DatabaseNode> nodes;
 
   const BarChart({super.key, required this.nodes});
 

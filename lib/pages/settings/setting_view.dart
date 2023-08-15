@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_app/helpers/messagebox.dart';
 
-import 'package:my_app/pages/home/home_view.dart';
-import 'package:my_app/pages/regester/view/regester_view.dart';
+import 'package:my_app/pages/routing/app_routs.dart';
+import 'package:my_app/services/services.dart';
 
-import 'package:my_app/utils/utils.dart';
 import 'widgets/widgets.dart';
 
 class SettingsView extends StatelessWidget {
@@ -11,83 +12,129 @@ class SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(210, 213, 240, 251),
-      appBar: AppBar(backgroundColor: Colors.transparent),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // margin
-            const SizedBox(height: 30),
-            // Profile settings
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16.0),
-              padding:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(24)),
-              child:
-                  // profile
-                  ValueListenableBuilder(
-                      valueListenable: userValueNotifier,
-                      builder: (context, activeUser, _) => Account(
-                            active: activeUser!,
-                            accounts: allUsers,
-                          )),
-            ),
-
-            // other settings
-            Container(
-              margin:
-                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(24)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Import Button
-                  TileButton(
-                    icon: Icons.drive_file_move_outline,
-                    title: 'Import Data',
-                    subtitle: const Text('Import Data From Storage'),
-                    onPress: () async {
-                      try {
-                        await import().then((value) =>
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const MyHomeView(),
-                            )));
-                      } on NoUsersFoundinDatabase {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const RegisterView(),
-                        ));
-                      }
-                    },
-                  ),
-
-                  // share button
-                  const TileButton(
-                    icon: Icons.share,
-                    title: 'Share Data',
-                    onPress: share,
-                  ),
-                ],
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<NodeBloc, NodeState>(
+          listener: (context, state) {
+            if (state is NodeStateUserExist) {
+              final message = state.message;
+              if (message != null) {
+                MessageBox.showMessage(context, message);
+              }
+            }
+          },
+        ),
+        BlocListener<MainBloc, MainState>(
+          listener: (context, state) {
+            if (state is MainStateHomePage) {
+              final message = state.message;
+              if (message != null) {
+                MessageBox.showMessage(context, message);
+              }
+            }
+          },
+        ),
+      ],
+      child: Scaffold(
+        backgroundColor: const Color.fromARGB(210, 213, 240, 251),
+        appBar: AppBar(backgroundColor: Colors.transparent),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              // margin
+              const SizedBox(height: 30),
+              // Profile settings
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(24)),
+                child:
+                    // profile
+                    BlocBuilder<NodeBloc, NodeState>(
+                  buildWhen: (previous, current) =>
+                      current is NodeStateUserExist,
+                  builder: (context, state) {
+                    if (state is NodeStateUserExist) {
+                      return Account(
+                        active: state.currentUser,
+                        accounts: state.allUsers,
+                        addAccount: () {
+                          Navigator.of(context)
+                              .pushNamed(AppRouts.registerpage);
+                        },
+                        showProfile: () {
+                          Navigator.of(context).pushNamed(
+                            AppRouts.profilepage,
+                            arguments: state.currentUser,
+                          );
+                        },
+                      );
+                    } else {
+                      return Container();
+                    }
+                  },
+                ),
               ),
-            ),
-            // catagory config
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16.0),
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(24)),
-              child:
-                  // catagory
-                  ValueListenableBuilder(
-                      valueListenable: userValueNotifier,
-                      builder: (context, __, _) =>
-                          CatagoryBuild(filters: allFilters)),
-            ),
-          ],
+
+              // other settings
+              Container(
+                margin:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(24)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Import Button
+                    TileButton(
+                        icon: Icons.drive_file_move_outline,
+                        title: 'Import Data',
+                        subtitle: const Text('Import Data From Storage'),
+                        onPress: () {
+                          context.read<MainBloc>().add(MainEventImport(() {
+                            context
+                                .read<NodeBloc>()
+                                .add(const NodeEventInitialise());
+                          }));
+                        }),
+
+                    // share button
+                    TileButton(
+                      icon: Icons.share,
+                      title: 'Share Data',
+                      onPress: () {
+                        context.read<MainBloc>().add(const MainEventShare());
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              // catagory config
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(24)),
+                child:
+                    // catagory
+                    BlocBuilder<MainBloc, MainState>(
+                  builder: (context, state) {
+                    if (state is MainStateHomePage) {
+                      return CatagoryBuild(filters: state.allfilters);
+                    } else {
+                      return Container();
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

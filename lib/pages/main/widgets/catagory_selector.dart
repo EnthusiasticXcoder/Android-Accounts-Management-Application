@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
-
-import 'package:my_app/utils/utils.dart';
+import 'package:my_app/services/services.dart';
 
 typedef ValueCallback = void Function(int?);
 
-// ignore: must_be_immutable
 class CatagorySelector extends StatelessWidget {
   final List catagory;
   final List subcatagory;
-  bool isVisible;
-  List<Catagory> _subCatagoryList = [];
+  final List<bool> isVisible = [];
+  final List<List<Catagory>> _subCatagoryList = [[]];
 
   CatagorySelector(
       {super.key,
       required this.catagory,
       required this.subcatagory,
-      this.isVisible = false});
+      bool isVisible = false}) {
+    this.isVisible.add(isVisible);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final filter = allFilters;
+    final filter = DatabaseService().filters;
     return StatefulBuilder(
       builder: (context, setState) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -31,12 +31,18 @@ class CatagorySelector extends StatelessWidget {
               hint: 'Catagory',
               onselect: (int? newValue) {
                 setState(() {
-                  isVisible = true;
+                  isVisible.removeAt(0);
+                  isVisible.insert(0, true);
                   if (catagory.isNotEmpty) catagory.removeLast();
                   catagory.insert(0, newValue);
-                  _subCatagoryList = filter
-                      .firstWhere((element) => element.catagory.id == newValue)
-                      .subcatagory;
+                  // adding sub catagory
+                  if (_subCatagoryList.isNotEmpty) _subCatagoryList.removeAt(0);
+                  _subCatagoryList.insert(
+                      0,
+                      filter
+                          .firstWhere(
+                              (element) => element.catagory.id == newValue)
+                          .subcatagory);
                   if (subcatagory.isNotEmpty) subcatagory.removeLast();
                   subcatagory.insert(0, null);
                 });
@@ -46,10 +52,10 @@ class CatagorySelector extends StatelessWidget {
           const SizedBox(height: 8.0),
           // sub catagory
           Visibility(
-              visible: isVisible,
+              visible: isVisible.first,
               child: dropMenuButton(
                   value: subcatagory.elementAtOrNull(0),
-                  catagoryList: _subCatagoryList,
+                  catagoryList: _subCatagoryList.first,
                   hint: 'SubCatagory',
                   onselect: (int? newValue) {
                     setState(() {

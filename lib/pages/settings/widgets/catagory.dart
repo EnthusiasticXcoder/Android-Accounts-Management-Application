@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_app/services/services.dart';
 
 import '../view/text_picker.dart';
-import 'package:my_app/utils/utils.dart';
-
 
 class CatagoryBuild extends StatefulWidget {
   final List<Filters> filters;
@@ -33,12 +33,11 @@ class _CatagoryBuildState extends State<CatagoryBuild> {
         trailing: IconButton(
           onPressed: () async {
             // Creating a new catagory
-            final name = await showTextPicker(context);
-
-            if (name != null && name.isNotEmpty) {
-              await createCatagory(name: name);
-            }
-            setState(() {});
+            await showTextPicker(context).then((name) {
+              if (name != null && name.isNotEmpty) {
+                context.read<MainBloc>().add(MainEventCreateCatagory(name));
+              }
+            });
           },
           icon: const Icon(
             Icons.add_rounded,
@@ -62,9 +61,10 @@ class _CatagoryBuildState extends State<CatagoryBuild> {
                       // button to remove a catagory
                       IconButton(
                         onPressed: () async {
-                          await removeCatagory(filter.catagory.id)
-                              .then((value) => setState(() {}));
-                          setState(() {});
+                          int id = filter.catagory.id;
+                          context
+                              .read<MainBloc>()
+                              .add(MainEventRemoveCatagory(id));
                         },
                         icon: const Icon(
                           Icons.remove_circle_outline_rounded,
@@ -76,13 +76,14 @@ class _CatagoryBuildState extends State<CatagoryBuild> {
                       IconButton(
                         onPressed: () async {
                           // Creating a new catagory
-                          final name = await showTextPicker(context);
-
-                          if (name != null && name.isNotEmpty) {
-                            await createSubCatagory(
-                                catagoryId: filter.catagory.id, name: name);
-                          }
-                          setState(() {});
+                          await showTextPicker(context).then((name) {
+                            if (name != null && name.isNotEmpty) {
+                              int id = filter.catagory.id;
+                              context
+                                  .read<MainBloc>()
+                                  .add(MainEventCreateSubCatagory(id, name));
+                            }
+                          });
                         },
                         icon: const Icon(
                           Icons.add_rounded,
@@ -102,11 +103,11 @@ class _CatagoryBuildState extends State<CatagoryBuild> {
 
                               // button to remove a catagory
                               trailing: IconButton(
-                                onPressed: () async {
-                                  await removeSubcatagory(
-                                      catagoryId: filter.catagory.id,
-                                      subCatagoryId: catagory.id);
-                                  setState(() {});
+                                onPressed: () {
+                                  int id = filter.catagory.id;
+                                  int subId = catagory.id;
+                                  context.read<MainBloc>().add(
+                                      MainEventRemoveSubCatagory(id, subId));
                                 },
                                 icon: const Icon(
                                   Icons.remove_circle_outline_rounded,

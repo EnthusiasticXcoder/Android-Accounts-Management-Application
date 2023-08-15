@@ -1,32 +1,25 @@
 import 'package:flutter/material.dart';
-
-import '../view/filter_view.dart';
-import 'package:my_app/utils/utils.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_app/services/services.dart';
 
 class Filter extends StatelessWidget {
-  Filter({super.key});
+  final VoidCallback onTap;
+  final List catagory, subcatagory, year, month, date;
 
-  final List _catagory = [],
-      _subcatagory = [],
-      _year = [yearList.firstOrNull],
-      _month = [],
-      _date = [];
+  const Filter({
+    super.key,
+    required this.onTap,
+    required this.catagory,
+    required this.subcatagory,
+    required this.year,
+    required this.month,
+    required this.date,
+  });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) => FilterView(
-              catagory: _catagory,
-              subcatagory: _subcatagory,
-              year: _year,
-              month: _month,
-              date: _date),
-        );
-      },
+      onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(left: 15.0),
         width: 200.0,
@@ -48,13 +41,14 @@ class Filter extends StatelessWidget {
             // margin
             const SizedBox(),
             // textfield to show filter
-            ValueListenableBuilder(
-                valueListenable: nodeValueNotifier,
-                builder: (context, __, _) {
+            BlocBuilder<MainBloc, MainState>(
+              buildWhen: (previous, current) => current is MainStateHomePage,
+              builder: (context, state) {
+                if (state is MainStateHomePage) {
                   List text = [];
-                  if (_catagory.isNotEmpty) text.add(' Catagory');
-                  if (_subcatagory.isNotEmpty) text.add(' Subcatagory');
-                  if (_month.isNotEmpty) text.add('Date');
+                  if (catagory.isNotEmpty) text.add(' Catagory');
+                  if (subcatagory.isNotEmpty) text.add(' Subcatagory');
+                  if (month.isNotEmpty) text.add('Date');
                   String value = 'No Filter';
                   if (text.isNotEmpty) {
                     value = 'Filter By : ${text.first}';
@@ -67,16 +61,21 @@ class Filter extends StatelessWidget {
                       style: const TextStyle(fontWeight: FontWeight.w500),
                     ),
                   );
-                }),
+                } else {
+                  return Container();
+                }
+              },
+            ),
+
             // clear filter button
             IconButton(
                 onPressed: () {
-                  if (_catagory.isNotEmpty) _catagory.removeLast();
-                  if (_subcatagory.isNotEmpty) _subcatagory.removeLast();
-                  if (_date.isNotEmpty) _date.removeLast();
-                  if (_month.isNotEmpty) _month.removeLast();
-                  if (_year.isNotEmpty) _year.removeLast();
-                  filterNodes(null);
+                  if (catagory.isNotEmpty) catagory.removeLast();
+                  if (subcatagory.isNotEmpty) subcatagory.removeLast();
+                  if (date.isNotEmpty) date.removeLast();
+                  if (month.isNotEmpty) month.removeLast();
+                  if (year.isNotEmpty) year.removeLast();
+                  context.read<MainBloc>().add(const MainEventFilterNode(null));
                 },
                 icon: Icon(
                   Icons.filter_alt_off_rounded,

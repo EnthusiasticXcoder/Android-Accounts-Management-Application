@@ -6,9 +6,6 @@ import '../database_exceptions.dart';
 import 'database_node.dart';
 
 class NodeService {
-  static final NodeService _service = NodeService._sharedInstance();
-  NodeService._sharedInstance();
-  factory NodeService() => _service;
 
   Iterable<DatabaseNode> _nodes = [];
 
@@ -106,18 +103,17 @@ class NodeService {
     _nodes = _nodes.followedBy([DatabaseNode.fromRow(values)]);
   }
 
-  Future<void> deleteNode(
-      {required Database db, required DatabaseNode node}) async {
+  Future<void> deleteNode({required Database db, required int id}) async {
     final numberofdelete = await db.delete(
       nodetable,
       where: '$idcolumn = ? ',
-      whereArgs: [node.id],
+      whereArgs: [id],
     );
 
     if (numberofdelete != 1) {
       throw UnableToDeleteException();
     } else {
-      _nodes = _nodes.where((element) => element.id != node.id);
+      _nodes = _nodes.where((element) => element.id != id);
     }
   }
 

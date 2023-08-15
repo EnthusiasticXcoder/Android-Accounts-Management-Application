@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 
-typedef NodeCallback = void Function();
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_app/services/services.dart';
+
 
 class DisplayMoreDialog extends StatelessWidget {
   final String amount;
-
+  final int id;
   final String catagory, subcatagory, dateTime;
   final Color statusColor;
-  final NodeCallback onDelete;
 
   const DisplayMoreDialog({
+    super.key,
     required this.amount,
     required this.dateTime,
     required this.statusColor,
-    required this.onDelete,
-    super.key,
     required this.catagory,
     required this.subcatagory,
+    required this.id,
   });
 
   @override
@@ -32,8 +33,8 @@ class DisplayMoreDialog extends StatelessWidget {
           // delete button
           IconButton(
               onPressed: () {
-                onDelete();
-                Navigator.of(context).pop();
+                context.read<MainBloc>().add(MainEventDeleteNode(id));
+                //Navigator.of(context).pop();
               },
               icon: const Icon(
                 Icons.delete,

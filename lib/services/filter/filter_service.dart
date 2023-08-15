@@ -5,9 +5,6 @@ import 'package:my_app/services/filter/database_filter.dart';
 import '../database_exceptions.dart';
 
 class FilterService {
-  static final FilterService _service = FilterService._sharedInstance();
-  FilterService._sharedInstance();
-  factory FilterService() => _service;
 
   List<Filters> _catagory = [];
 

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:my_app/pages/home/widgets/catagory_selector.dart';
-import 'package:my_app/utils/utils.dart';
+import 'package:my_app/pages/main/widgets/catagory_selector.dart';
+import 'package:my_app/services/services.dart';
 
 
 class CreateNewNodeDialog extends StatefulWidget {
@@ -69,16 +70,21 @@ class _CreateNewNodeDialogState extends State<CreateNewNodeDialog> {
           left: 22.0, right: 22.0, top: 25.0, bottom: 8.0),
       actions: [
         TextButton(
-            onPressed: () async {
-              Navigator.of(context).pop();
+            onPressed: () {
               if (_amountController.text.isNotEmpty) {
-                await createNode(
-                  amount: int.tryParse(_amountController.text)!,
-                  catagoryId: _catagory.elementAt(0),
-                  subCatagoryId: _subcatagory.elementAt(0),
-                  isIncome: (widget.isIncome) ? 1 : 0,
-                );
+                final amount = int.tryParse(_amountController.text)!;
+                final catagoryId = _catagory.elementAt(0);
+                final subCatagoryId = _subcatagory.elementAt(0);
+                final isIncome = (widget.isIncome) ? 1 : 0;
+
+                context.read<MainBloc>().add(MainEventCreateNode(
+                    amount: amount,
+                    catagoryId: catagoryId,
+                    subCatagoryId: subCatagoryId,
+                    isIncome: isIncome));
               }
+
+              Navigator.of(context).pop();
             },
             child: const Text("Done"))
       ],

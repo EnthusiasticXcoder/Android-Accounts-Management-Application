@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/pages/home/view/display.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_app/services/services.dart';
+
 
 typedef NodeCallback = void Function();
 
 class NodeTile extends StatelessWidget {
+  final int id;
   final bool isIncome;
   final String catagory, subcatagory, dateTime;
   final int amount;
-  final NodeCallback onDelete;
 
   const NodeTile({
     super.key,
+    required this.id,
     required this.isIncome,
     required this.dateTime,
     required this.amount,
-    required this.onDelete,
     required this.catagory,
     required this.subcatagory,
   });
@@ -63,17 +65,15 @@ class NodeTile extends StatelessWidget {
 
         // Discription overview
         onLongPress: () {
-          showDialog(
-            context: context,
-            builder: (context) => DisplayMoreDialog(
-              amount: amount.toString(),
-              dateTime: dateTime,
-              catagory: catagory,
-              subcatagory: subcatagory,
-              statusColor: isIncome ? Colors.green : Colors.red,
-              onDelete: onDelete,
-            ),
-          );
+          // open discription dailog
+          context.read<MainBloc>().add(MainEventDisplayNode(
+                id: id,
+                amount: amount.toString(),
+                catagory: catagory,
+                subcatagory: subcatagory,
+                dateTime: dateTime,
+                statusColor: isIncome,
+              ),);
         },
       ),
     );

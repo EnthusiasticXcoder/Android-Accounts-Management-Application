@@ -1,27 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:my_app/pages/regester/view/regester_view.dart';
 import 'package:my_app/pages/regester/widgets/editable_profile.dart';
+import 'package:my_app/pages/routing/app_routs.dart';
+import 'package:my_app/services/services.dart';
 
-import 'package:my_app/utils/utils.dart';
-
-
-
-typedef SaveCallback = void Function(String?);
+import '../widgets/text_form_field.dart';
 
 class ProfilePage extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
-  final DatabaseUser activeuser;
+  final Object? arguments;
 
-  ProfilePage({super.key, required this.activeuser});
+  ProfilePage({super.key, required this.arguments});
 
   @override
   Widget build(BuildContext context) {
+    final activeuser = arguments as DatabaseUser;
     return Container(
         decoration: const BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('asset/images/login.png'), fit: BoxFit.fill)),
+          image: DecorationImage(
+            image: AssetImage('asset/images/login.png'),
+            fit: BoxFit.fill,
+          ),
+        ),
         child: Scaffold(
+            resizeToAvoidBottomInset: false,
             backgroundColor: Colors.transparent,
             appBar: AppBar(
               backgroundColor: Colors.transparent,
@@ -31,17 +34,14 @@ class ProfilePage extends StatelessWidget {
             floatingActionButton: FloatingActionButton(
               backgroundColor: Colors.redAccent,
               child: const Icon(Icons.delete_forever),
-              onPressed: () async {
-                try {
-                  await deleteUser(activeuser.id)
-                      .then((value) => Navigator.of(context).pop());
-                } on AllUserDeleted {
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (context) => const RegisterView(),
-                      ),
-                      (route) => false);
-                }
+              onPressed: () {
+                // Deleting Current Active User
+                final userId = activeuser.id;
+                context.read<NodeBloc>().add(NodeEventDeleteUser(userId));
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  AppRouts.homepage,
+                  (route) => route.settings.name == AppRouts.homepage,
+                );
               },
             ),
             body: Stack(children: [
@@ -55,52 +55,64 @@ class ProfilePage extends StatelessWidget {
               ),
 
               // Form Filet entry Input
-              SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
-                  child: Container(
-                    padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.36),
-                    margin: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Column(
-                      children: [
-                        // margin
-                        const SizedBox(height: 40),
+              Form(
+                key: _formKey,
+                child: Container(
+                  padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.36),
+                  margin: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                    children: [
+                      // margin
+                      const SizedBox(height: 40),
 
-                        // Text field for name
-                        formInput(
-                          onSave: (newValue) async {
-                            if (newValue != activeuser.name) {
-                              await updateUser(
-                                  id: activeuser.id, name: newValue);
-                            }
-                          },
-                          context: context,
-                          value: activeuser.name,
-                          lable: 'Name',
-                          hint: 'eg. Your Name',
-                          icon: Icons.person,
-                        ),
+                      // Text field for name
+                      FormInputField(
+                        formKey: _formKey,
+                        onSave: (newValue) async {
+                          if (newValue != activeuser.name) {
+                            final id = activeuser.id;
+                            final name = newValue;
+                            // update user's Name
+                            context.read<NodeBloc>().add(
+                                  NodeEventUpdateUser(
+                                    id: id,
+                                    name: name,
+                                  ),
+                                );
+                          }
+                        },
+                        value: activeuser.name,
+                        lable: 'Name',
+                        hint: 'eg. Your Name',
+                        icon: Icons.person,
+                      ),
 
-                        // margin
-                        const SizedBox(height: 20),
+                      // margin
+                      const SizedBox(height: 20),
 
-                        // text field for description
-                        formInput(
-                          onSave: (newValue) async {
-                            if (newValue != activeuser.info) {
-                              await updateUser(
-                                  id: activeuser.id, info: newValue);
-                            }
-                          },
-                          context: context,
-                          value: activeuser.info,
-                          lable: 'Info',
-                          hint: 'eg. Personal',
-                          icon: Icons.info_outline,
-                        ),
-                      ],
-                    ),
+                      // text field for description
+                      FormInputField(
+                        formKey: _formKey,
+                        onSave: (newValue) async {
+                          if (newValue != activeuser.info) {
+                            final id = activeuser.id;
+                            final info = newValue;
+                            // update user's Name
+                            context.read<NodeBloc>().add(
+                                  NodeEventUpdateUser(
+                                    id: id,
+                                    info: info,
+                                  ),
+                                );
+                          }
+                        },
+                        value: activeuser.info,
+                        lable: 'Info',
+                        hint: 'eg. Personal',
+                        icon: Icons.info_outline,
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -112,52 +124,5 @@ class ProfilePage extends StatelessWidget {
                 child: const EditableProfile(),
               ),
             ])));
-  }
-
-  TextFormField formInput({
-    required BuildContext context,
-    required String value,
-    required IconData icon,
-    required String hint,
-    required String lable,
-    SaveCallback? onSave,
-  }) {
-    return TextFormField(
-      initialValue: value,
-      onTapOutside: (event) {
-        if (_formKey.currentState!.validate()) {
-          _formKey.currentState!.save();
-        }
-        FocusScope.of(context).unfocus();
-      },
-      onChanged: (value) {
-        _formKey.currentState!.validate();
-      },
-      onEditingComplete: () {
-        if (_formKey.currentState!.validate()) {
-          _formKey.currentState!.save();
-        }
-        FocusScope.of(context).unfocus();
-      },
-      onSaved: onSave,
-      validator: (val) =>
-          val != null && val.isNotEmpty ? null : 'Required Field',
-      decoration: InputDecoration(
-          prefixIcon: Icon(icon, color: Colors.blue),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-          hintText: hint,
-          fillColor: Colors.grey.shade100,
-          filled: true,
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-              color: Colors.black,
-            ),
-          ),
-          label: Text(lable)),
-    );
   }
 }

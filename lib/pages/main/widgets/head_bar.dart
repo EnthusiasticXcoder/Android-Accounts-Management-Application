@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/pages/settings/setting_view.dart';
 
 class Headwidget extends StatelessWidget {
   final String name;
   final String? image;
-  const Headwidget({super.key, required this.name, this.image});
+  final VoidCallback navigate;
+  const Headwidget({
+    super.key,
+    required this.name,
+    this.image,
+    required this.navigate,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +34,7 @@ class Headwidget extends StatelessWidget {
               child: CircleAvatar(
                 foregroundImage: (image == null) ? null : AssetImage(image!),
                 child: IconButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const SettingsView(),
-                    ));
-                  },
+                  onPressed: navigate,
                   icon: const Icon(Icons.person),
                 ),
               ),

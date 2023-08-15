@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart' show ValueNotifier;
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -13,12 +12,11 @@ import 'user/user.dart';
 class DatabaseService {
   Database? _db;
 
-  late ValueNotifier<Iterable<DatabaseNode>> _currentNodes;
-  late ValueNotifier<DatabaseUser?> _activeUser;
-
   late final UserService _userService;
   late final NodeService _nodeService;
   late final FilterService _filterService;
+
+  Iterable<DatabaseNode> _currentNode = [];
 
   static final DatabaseService _service = DatabaseService._sharedInstance();
   factory DatabaseService() => _service;
@@ -28,23 +26,23 @@ class DatabaseService {
     _filterService = FilterService();
   }
 
-  // User Variables
-  ValueNotifier<DatabaseUser?> get userValueNotifier => _activeUser;
   // Get All Users
   Iterable<DatabaseUser> get getAllUsers => _userService.getUsers;
+  // Active User
+  DatabaseUser get currentUser => _userService.activeUser;
+  // Current Nodes
 
-  // Node Variables
-  ValueNotifier<Iterable<DatabaseNode>> get nodeValueLisnable => _currentNodes;
+  int get sumIncome => _nodeService.totalIncome(_currentNode);
+  int get sumExpense => _nodeService.totalExpense(_currentNode);
+  int get sumBalance => _nodeService.balance(_currentNode);
 
-  int get sumIncome => _nodeService.totalIncome(_currentNodes.value);
-  int get sumExpense => _nodeService.totalExpense(_currentNodes.value);
-  int get sumBalance => _nodeService.balance(_currentNodes.value);
-
-  int get maxNodeAmount => _nodeService.getMaxAmount(_currentNodes.value);
+  int get maxNodeAmount => _nodeService.getMaxAmount(_currentNode);
 
   List<int> get getMonths => _nodeService.getmonths;
   List<int> get getDates => _nodeService.getdates;
   List<int> get getYears => _nodeService.getyears;
+
+  Iterable<DatabaseNode> get allNodes => _currentNode;
 
   // Users
   Future<void> createUser({
@@ -54,29 +52,26 @@ class DatabaseService {
   }) async {
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
-    await _userService.createUser(
+    final newUser = await _userService.createUser(
       db: db,
       username: username,
       info: info,
       imagePath: imagePath,
     );
-    _activeUser.value = _userService.activeUser;
-    initialiseNodes();
+    await changeActiveUser(newUser);
   }
 
   Future<void> deleteUser(int id) async {
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     await _userService.deleteUser(db: db, id: id);
-    _activeUser.value = _userService.activeUser;
-    initialiseNodes();
+    await changeActiveUser(getAllUsers.first);
   }
 
   Future<void> changeActiveUser(DatabaseUser user) async {
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     await _userService.changeActiveuser(db: db, user: user);
-    initialiseNodes();
   }
 
   Future<void> updateUser(
@@ -92,16 +87,15 @@ class DatabaseService {
     };
 
     await _userService.updateUser(db: db, values: values);
-    _activeUser.value = _userService.activeUser;
   }
 
   // Nodes
   void filterNodes(FilterBy? filter) {
     if (filter == null) {
-      _currentNodes.value = _nodeService.allNodes;
+      _currentNode = _nodeService.allNodes;
     } else {
       final nodes = _nodeService.filterNodes(filter: filter);
-      _currentNodes.value = nodes;
+      _currentNode = nodes;
     }
   }
 
@@ -125,14 +119,14 @@ class DatabaseService {
         catagoryId: catagoryId,
         subCatagoryId: subCatagoryId,
         isIncome: isIncome);
-    _currentNodes.value = _nodeService.allNodes;
+    _currentNode = _nodeService.allNodes;
   }
 
-  Future<void> deleteNode(DatabaseNode node) async {
+  Future<void> deleteNode(int id) async {
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
-    await _nodeService.deleteNode(db: db, node: node);
-    _currentNodes.value = _nodeService.allNodes;
+    await _nodeService.deleteNode(db: db, id: id);
+    _currentNode = _nodeService.allNodes;
   }
 
   // Filters
@@ -199,8 +193,8 @@ class DatabaseService {
     await _nodeService.loadNodes(db: db, userId: activeuser.id);
     // load filters
     await _filterService.loadFilters(db: db, userId: activeuser.id);
-    _activeUser.value = activeuser;
-    _currentNodes.value = _nodeService.allNodes;
+
+    _currentNode = _nodeService.allNodes;
   }
 
   Database _getDatabaseOrThrow() {
@@ -233,8 +227,6 @@ class DatabaseService {
   Future<void> close() async {
     final db = _db;
     if (db != null) {
-      _currentNodes.dispose();
-      _activeUser.dispose();
       await db.close();
       _db = null;
     } else {
@@ -263,9 +255,6 @@ class DatabaseService {
 
       // create the sub catagory table
       await db.execute(subCatagoryTable);
-      // initialaise value notifiers
-      _currentNodes = ValueNotifier(<DatabaseNode>[]);
-      _activeUser = ValueNotifier(null);
     } on MissingPlatformDirectoryException {
       throw UnableToGetDocumentsDirectory();
     }

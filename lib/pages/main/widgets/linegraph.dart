@@ -3,10 +3,10 @@ import 'package:my_app/services/node/database_node.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class Linegraph extends StatelessWidget {
-  final List<DatabaseNode> nodes;
+  final Iterable<DatabaseNode> nodes;
   final int maxvalue;
 
-  const Linegraph({super.key, required this.nodes, required this.maxvalue});
+  const Linegraph({super.key, required this.nodes, required this.maxvalue,});
 
   @override
   Widget build(BuildContext context) {

@@ -5,17 +5,14 @@ import 'package:my_app/services/user/database_user.dart';
 import '../database_exceptions.dart';
 
 class UserService {
-  static final UserService _service = UserService._sharedInstance();
-  UserService._sharedInstance();
-  factory UserService() => _service;
-
+  
   Iterable<DatabaseUser> _users = [];
   DatabaseUser? _activeUser;
 
   DatabaseUser get activeUser => _activeUser!;
   Iterable<DatabaseUser> get getUsers => _users;
 
-  Future<void> createUser(
+  Future<DatabaseUser> createUser(
       {required Database db,
       required String username,
       required String info,
@@ -41,7 +38,7 @@ class UserService {
       return user;
     }).followedBy([newUser]);
 
-    _activeUser = newUser;
+    return newUser;
   }
 
   Future<void> deleteUser({required Database db, required int id}) async {
@@ -58,7 +55,6 @@ class UserService {
       if (_users.isEmpty) {
         throw AllUserDeleted();
       }
-      _activeUser = _users.elementAt(0);
     }
   }
 
