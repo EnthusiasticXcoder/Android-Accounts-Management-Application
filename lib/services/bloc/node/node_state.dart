@@ -1,14 +1,14 @@
 import 'package:flutter/foundation.dart' show immutable;
 import 'package:my_app/services/services.dart';
 
-
 @immutable
 abstract class NodeState {
   const NodeState();
 }
 
 class NodeLoadingState extends NodeState {
-  const NodeLoadingState();
+  final bool isLoading;
+  const NodeLoadingState(this.isLoading);
 }
 
 class NodeStateCreateUser extends NodeState {

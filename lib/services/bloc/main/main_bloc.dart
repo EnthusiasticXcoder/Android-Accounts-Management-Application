@@ -196,7 +196,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         event.event();
         return;
       }
-      event.event;
+      event.event();
       emit(
         MainStateHomePage(
           message: 'Data Successfully Imported',
