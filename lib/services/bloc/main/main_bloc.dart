@@ -7,24 +7,25 @@ import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-
 class MainBloc extends Bloc<MainEvent, MainState> {
   MainBloc(DatabaseService service)
-      : super(MainStateHomePage(
-          allNodes: service.allNodes,
-          maxNodeAmount: service.maxNodeAmount,
-          sumBalance: service.sumBalance,
-          sumExpense: service.sumExpense,
-          sumIncome: service.sumIncome,
-          allfilters: service.filters,
-          getCatagoryNameById: (catagoryId, subCatagoryId) =>
-              service.getCatagoryNameById(
-            catagoryId: catagoryId,
-            subCatagoryId: subCatagoryId,
+      : super(
+          MainStateHomePage(
+            allNodes: service.allNodes,
+            maxNodeAmount: service.maxNodeAmount,
+            sumBalance: service.sumBalance,
+            sumExpense: service.sumExpense,
+            sumIncome: service.sumIncome,
+            allfilters: service.filters,
+            getCatagoryNameById: (catagoryId, subCatagoryId) =>
+                service.getCatagoryNameById(
+              catagoryId: catagoryId,
+              subCatagoryId: subCatagoryId,
+            ),
+            filterNodeByIncome: (nodes, isIncome) =>
+                service.filterNodesByIncome(nodes, isIncome),
           ),
-          filterNodeByIncome: (nodes, isIncome) =>
-              service.filterNodesByIncome(nodes, isIncome),
-        ),) {
+        ) {
     // Open Filter Node Dialogg
     on<MainEventFilteringNode>((event, emit) {
       emit(MainStateFilteringNode(
@@ -53,21 +54,23 @@ class MainBloc extends Bloc<MainEvent, MainState> {
 
     // Event On Pop Of Dialof For State Home Page
     on<MainEventHideDialog>((event, emit) {
-      emit(MainStateHomePage(
-        allNodes: service.allNodes,
-        maxNodeAmount: service.maxNodeAmount,
-        sumBalance: service.sumBalance,
-        sumExpense: service.sumExpense,
-        sumIncome: service.sumIncome,
-        allfilters: service.filters,
-        getCatagoryNameById: (catagoryId, subCatagoryId) =>
-            service.getCatagoryNameById(
-          catagoryId: catagoryId,
-          subCatagoryId: subCatagoryId,
+      emit(
+        MainStateHomePage(
+          allNodes: service.allNodes,
+          maxNodeAmount: service.maxNodeAmount,
+          sumBalance: service.sumBalance,
+          sumExpense: service.sumExpense,
+          sumIncome: service.sumIncome,
+          allfilters: service.filters,
+          getCatagoryNameById: (catagoryId, subCatagoryId) =>
+              service.getCatagoryNameById(
+            catagoryId: catagoryId,
+            subCatagoryId: subCatagoryId,
+          ),
+          filterNodeByIncome: (nodes, isIncome) =>
+              service.filterNodesByIncome(nodes, isIncome),
         ),
-        filterNodeByIncome: (nodes, isIncome) =>
-            service.filterNodesByIncome(nodes, isIncome),
-      ),);
+      );
     });
 
     // Create Node Event

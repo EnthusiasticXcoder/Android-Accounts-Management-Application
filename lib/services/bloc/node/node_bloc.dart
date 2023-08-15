@@ -91,7 +91,7 @@ class NodeBloc extends Bloc<NodeEvent, NodeState> {
       emit(NodeStateUserExist(
         allUsers: service.getAllUsers,
         currentUser: service.currentUser,
-        message: 'User Changed, Loggedin as $name',
+        message: 'User Changed, Logged In as $name',
       ));
     });
   }
