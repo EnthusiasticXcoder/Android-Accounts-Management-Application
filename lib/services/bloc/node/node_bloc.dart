@@ -114,9 +114,12 @@ class NodeBloc extends Bloc<NodeEvent, NodeState> {
       emit(const NodeLoadingState(true));
       await service.changeActiveUser(event.user);
 
-      String name = service.currentUser.name;
-      // stao Loading
+      await service.initialiseNodes();
+      // stop Loading
       emit(const NodeLoadingState(false));
+
+      String name = service.currentUser.name;
+
       emit(
         NodeStateUserExist(
           allUsers: service.getAllUsers,

@@ -7,6 +7,7 @@ class Account extends StatefulWidget {
   final DatabaseUser active;
   final VoidCallback showProfile;
   final VoidCallback addAccount;
+
   const Account({
     super.key,
     required this.accounts,
@@ -20,13 +21,7 @@ class Account extends StatefulWidget {
 }
 
 class _AccountState extends State<Account> {
-  late final ExpansionTileController _controller;
-
-  @override
-  void initState() {
-    _controller = ExpansionTileController();
-    super.initState();
-  }
+  final ExpansionTileController _controller = ExpansionTileController();
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +65,9 @@ class _AccountState extends State<Account> {
                   onTap: () {
                     context.read<NodeBloc>().add(
                           NodeEventChangeActiveUser(user),
+                        );
+                    context.read<MainBloc>().add(
+                          const MainEventHideDialog(),
                         );
                     _controller.collapse();
                   },

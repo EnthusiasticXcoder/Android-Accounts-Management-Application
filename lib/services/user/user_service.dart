@@ -23,10 +23,7 @@ class UserService {
     final newUser =
         DatabaseUser(id: id, name: username, info: info, isactive: true);
 
-    _users.map((user) {
-      user.isactive = false;
-      return user;
-    }).followedBy([newUser]);
+    _users = _users.followedBy([newUser]);
 
     return newUser;
   }
@@ -61,7 +58,8 @@ class UserService {
     } else {
       values.addAll({idcolumn: activeUser.id});
       final user = DatabaseUser.fromrow(values);
-      _users.map((element) => (element.id == activeUser.id) ? user : element);
+      _users = _users
+          .map((element) => (element.id == activeUser.id) ? user : element);
       _activeUser = user;
     }
   }
@@ -82,9 +80,9 @@ class UserService {
     if (updateCount == 0) {
       throw CouldNotUpdateNote();
     } else {
-      _users.map((item) {
-        (item.id == user.id) ? user.isactive = true : user.isactive = false;
-        return user;
+      _users = _users.map((item) {
+        (item.id == user.id) ? item.isactive = true : item.isactive = false;
+        return item;
       });
       _activeUser = user;
     }

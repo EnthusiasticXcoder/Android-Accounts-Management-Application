@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_app/helpers/loading_screen.dart';
+import 'package:my_app/services/bloc/main/main.dart';
 import 'package:my_app/services/bloc/node/node_event.dart';
 
 import 'pages/main/main_view.dart';
@@ -33,6 +34,9 @@ class HomePage extends StatelessWidget {
         if (state is NodeStateCreateUser) {
           return const RegisterView();
         } else if (state is NodeStateUserExist) {
+          context.read<MainBloc>().add(
+                const MainEventHideDialog(),
+              );
           return const MainView();
         } else {
           return const Scaffold();

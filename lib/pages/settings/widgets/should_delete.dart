@@ -32,7 +32,6 @@ class ShouldDelete {
                 AppRouts.homepage,
                 (route) => route.settings.name == AppRouts.homepage,
               );
-              Navigator.of(context).pop();
             },
             child: const Text(
               'Delete',
