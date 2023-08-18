@@ -20,6 +20,10 @@ This is a cross-platform Flutter project designed for Android and iOS devices. T
 ---
 
 ## Features
+1. Multiple Accounts
+   - Manage Different Accounts For Different Purposes such as Personal, Bussiness, Friends, etc.
+   - Easily Switch Between Accounts.
+
 2. Dashboard
    - Overview of income and expenses
    - Charts and graphs for visual representation
@@ -37,7 +41,10 @@ This is a cross-platform Flutter project designed for Android and iOS devices. T
    - Generate reports based on income and expenses
    - Analyze spending patterns and trends
    - Set budget goals and track progress
-
+   
+6. Import and Export
+   - Export or Share Your Data To Another Device In case You Change Your Device Data Will Be Secured
+   - Import The Shared Data, Load The Exported File And Restore Your Data. 
 
 ---
 
