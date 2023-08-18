@@ -4,9 +4,17 @@ This is a cross-platform Flutter project designed for Android and iOS devices. T
 ---
 
 <p float="left">
-   <img src="example_images/example_1.jpg" width="260" />
+   <img src="example_images/example_8.jpg" width="260" />
+   <img src="example_images/example_6.jpg" width="260" /> 
+   <img src="example_images/example_5.jpg" width="260" />
+</p>
+
+---
+
+<p float="left">
    <img src="example_images/example_2.jpg" width="260" /> 
-   <img src="example_images/example_6.jpg" width="260" />
+   <img src="example_images/example_4.jpg" width="260" /> 
+   <img src="example_images/example_3.jpg" width="260" /> 
 </p>
 
 ---
@@ -34,9 +42,9 @@ This is a cross-platform Flutter project designed for Android and iOS devices. T
 ---
 
 <p float="left">
-   <img src="example_images/example_3.jpg" width="260" /> 
-   <img src="example_images/example_4.jpg" width="260" /> 
-   <img src="example_images/example_5.jpg" width="260" /> 
+   <img src="example_images/example_7.jpg" width="260" /> 
+   <img src="example_images/example_1.jpg" width="260" /> 
+   <img src="example_images/example_9.jpg" width="260" /> 
 </p>
 
 ---
