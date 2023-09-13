@@ -22,11 +22,7 @@ class _MainViewState extends State<MainView>
   late final PageController _pageController;
   late final TabController _tabController;
 
-  final List _catagory = [],
-      _subcatagory = [],
-      _year = [DateTime.now().year],
-      _month = [],
-      _date = [];
+  final filter = FilterBy(year: DateTime.now().year);
 
   @override
   void initState() {
@@ -62,11 +58,8 @@ class _MainViewState extends State<MainView>
                 dateList: state.dateList,
                 monthList: state.monthList,
                 yearList: state.yearList,
-                catagory: _catagory,
-                subcatagory: _subcatagory,
-                year: _year,
-                month: _month,
-                date: _date),
+                filter: filter,
+                ),
           ).whenComplete(
               () => context.read<MainBloc>().add(const MainEventHideDialog()));
         } else if (state is MainStateDisplayNode) {
@@ -178,17 +171,14 @@ class _MainViewState extends State<MainView>
               return TabbarWidget(
                 tabController: _tabController,
                 filter: Filter(
+                  filter: filter,
                   onTap: () {
                     // open FIlter Dialog
                     context
                         .read<MainBloc>()
                         .add(const MainEventFilteringNode());
                   },
-                  catagory: _catagory,
-                  date: _date,
-                  month: _month,
-                  subcatagory: _subcatagory,
-                  year: _year,
+                  
                 ),
                 tabs: const ['Income', 'Expendeture'],
                 tabviews: <Widget>[

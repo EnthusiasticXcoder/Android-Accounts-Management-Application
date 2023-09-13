@@ -28,17 +28,29 @@ class Catagory {
 }
 
 class FilterBy {
-  final int? date;
-  final int year;
-  final int? month;
-  final int? catagory;
-  final int? subcatagory;
+  int? date;
+  int year;
+  int? month;
+  int? catagory;
+  int? subcatagory;
 
-  const FilterBy({
+  FilterBy({
     this.date,
     required this.year,
     this.month,
     this.catagory,
     this.subcatagory,
   });
+
+  @override
+  String toString() {
+    return '$catagory $subcatagory $year $month $date';
+  }
+
+  void setNull() {
+    catagory = null;
+    subcatagory = null;
+    month = null;
+    date = null;
+  }
 }

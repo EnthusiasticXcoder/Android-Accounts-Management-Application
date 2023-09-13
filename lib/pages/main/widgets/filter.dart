@@ -4,16 +4,12 @@ import 'package:my_app/services/services.dart';
 
 class Filter extends StatelessWidget {
   final VoidCallback onTap;
-  final List catagory, subcatagory, year, month, date;
+  final FilterBy filter;
 
   const Filter({
     super.key,
     required this.onTap,
-    required this.catagory,
-    required this.subcatagory,
-    required this.year,
-    required this.month,
-    required this.date,
+    required this.filter,
   });
 
   @override
@@ -46,9 +42,9 @@ class Filter extends StatelessWidget {
               builder: (context, state) {
                 if (state is MainStateHomePage) {
                   List text = [];
-                  if (catagory.isNotEmpty) text.add(' Catagory');
-                  if (subcatagory.isNotEmpty) text.add(' Subcatagory');
-                  if (month.isNotEmpty) text.add('Date');
+                  if (filter.catagory != null) text.add(' Catagory');
+                  if (filter.subcatagory != null) text.add(' Subcatagory');
+                  if (filter.month != null) text.add('Date');
                   String value = 'No Filter';
                   if (text.isNotEmpty) {
                     value = 'Filter By : ${text.first}';
@@ -70,12 +66,10 @@ class Filter extends StatelessWidget {
             // clear filter button
             IconButton(
                 onPressed: () {
-                  if (catagory.isNotEmpty) catagory.removeLast();
-                  if (subcatagory.isNotEmpty) subcatagory.removeLast();
-                  if (date.isNotEmpty) date.removeLast();
-                  if (month.isNotEmpty) month.removeLast();
-                  if (year.isNotEmpty) year.removeLast();
-                  context.read<MainBloc>().add(const MainEventFilterNode(null));
+                  filter.setNull();
+                  context.read<MainBloc>().add(
+                        MainEventFilterNode(filter),
+                      );
                 },
                 icon: Icon(
                   Icons.filter_alt_off_rounded,

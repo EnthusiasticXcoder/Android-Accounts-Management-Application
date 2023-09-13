@@ -4,22 +4,26 @@ import 'package:my_app/services/services.dart';
 typedef ValueCallback = void Function(int?);
 
 class CatagorySelector extends StatelessWidget {
-  final List catagory;
-  final List subcatagory;
+  final FilterBy filterBy;
   final List<bool> isVisible = [];
   final List<List<Catagory>> _subCatagoryList = [[]];
+  late final List<Filters> filter;
 
   CatagorySelector(
-      {super.key,
-      required this.catagory,
-      required this.subcatagory,
-      bool isVisible = false}) {
+      {super.key, bool isVisible = false, required this.filterBy}) {
     this.isVisible.add(isVisible);
+
+    filter = DatabaseService().filters;
+
+    if (filterBy.catagory != null) {
+      _subCatagoryList[0] = filter
+          .firstWhere((item) => item.catagory.id == filterBy.catagory)
+          .subcatagory;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final filter = DatabaseService().filters;
     return StatefulBuilder(
       builder: (context, setState) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -27,24 +31,19 @@ class CatagorySelector extends StatelessWidget {
           // Catagory Field
           dropMenuButton(
               catagoryList: filter.map((element) => element.catagory),
-              value: catagory.elementAtOrNull(0),
+              value: filterBy.catagory,
               hint: 'Catagory',
               onselect: (int? newValue) {
                 setState(() {
                   isVisible.removeAt(0);
                   isVisible.insert(0, true);
-                  if (catagory.isNotEmpty) catagory.removeLast();
-                  catagory.insert(0, newValue);
+                  filterBy.catagory = newValue;
                   // adding sub catagory
-                  if (_subCatagoryList.isNotEmpty) _subCatagoryList.removeAt(0);
-                  _subCatagoryList.insert(
-                      0,
-                      filter
-                          .firstWhere(
-                              (element) => element.catagory.id == newValue)
-                          .subcatagory);
-                  if (subcatagory.isNotEmpty) subcatagory.removeLast();
-                  subcatagory.insert(0, null);
+                  _subCatagoryList[0] = filter
+                      .firstWhere((element) => element.catagory.id == newValue)
+                      .subcatagory;
+
+                  filterBy.subcatagory = null;
                 });
               }),
 
@@ -54,13 +53,12 @@ class CatagorySelector extends StatelessWidget {
           Visibility(
               visible: isVisible.first,
               child: dropMenuButton(
-                  value: subcatagory.elementAtOrNull(0),
+                  value: filterBy.subcatagory,
                   catagoryList: _subCatagoryList.first,
                   hint: 'SubCatagory',
                   onselect: (int? newValue) {
                     setState(() {
-                      if (subcatagory.isNotEmpty) subcatagory.removeLast();
-                      subcatagory.insert(0, newValue);
+                      filterBy.subcatagory = newValue;
                     });
                   })),
         ],

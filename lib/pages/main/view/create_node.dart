@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_app/pages/main/widgets/catagory_selector.dart';
 import 'package:my_app/services/services.dart';
 
-
 class CreateNewNodeDialog extends StatefulWidget {
   const CreateNewNodeDialog({super.key, required this.isIncome});
   final bool isIncome;
@@ -15,11 +14,12 @@ class CreateNewNodeDialog extends StatefulWidget {
 
 class _CreateNewNodeDialogState extends State<CreateNewNodeDialog> {
   late final TextEditingController _amountController;
-  final List _catagory = [], _subcatagory = [];
+  late final FilterBy _filterBy;
 
   @override
   void initState() {
     _amountController = TextEditingController();
+    _filterBy = FilterBy(year: 2023);
     super.initState();
   }
 
@@ -61,8 +61,7 @@ class _CreateNewNodeDialogState extends State<CreateNewNodeDialog> {
           const SizedBox(height: 18.0),
           // Catagoryselector
           CatagorySelector(
-            catagory: _catagory,
-            subcatagory: _subcatagory,
+            filterBy: _filterBy,
           ),
         ],
       ),
@@ -73,15 +72,15 @@ class _CreateNewNodeDialogState extends State<CreateNewNodeDialog> {
             onPressed: () {
               if (_amountController.text.isNotEmpty) {
                 final amount = int.tryParse(_amountController.text)!;
-                final catagoryId = _catagory.elementAt(0);
-                final subCatagoryId = _subcatagory.elementAt(0);
+                final catagoryId = _filterBy.catagory;
+                final subCatagoryId = _filterBy.subcatagory;
                 final isIncome = (widget.isIncome) ? 1 : 0;
 
                 context.read<MainBloc>().add(MainEventCreateNode(
                     amount: amount,
-                    catagoryId: catagoryId,
-                    subCatagoryId: subCatagoryId,
-                    isIncome: isIncome));
+                    catagoryId: catagoryId!,
+                    subCatagoryId: subCatagoryId!,
+                    isIncome: isIncome),);
               }
 
               Navigator.of(context).pop();

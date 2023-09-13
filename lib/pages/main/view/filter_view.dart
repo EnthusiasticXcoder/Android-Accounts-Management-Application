@@ -10,17 +10,12 @@ class FilterView extends StatelessWidget {
   final List<int> monthList;
   const FilterView({
     super.key,
-    required this.catagory,
-    required this.subcatagory,
-    required this.year,
-    required this.month,
-    required this.date,
     required this.yearList,
     required this.dateList,
     required this.monthList,
+    required this.filter,
   });
-
-  final List catagory, subcatagory, year, month, date;
+  final FilterBy filter;
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +41,7 @@ class FilterView extends StatelessWidget {
               const SizedBox(height: 18.0),
               // Catagoryselector
               CatagorySelector(
-                catagory: catagory,
-                subcatagory: subcatagory,
+                filterBy: filter,
                 isVisible: true,
               ),
 
@@ -59,8 +53,7 @@ class FilterView extends StatelessWidget {
                   // year selector
                   DropdownMenu(
                     onSelected: (value) {
-                      if (year.isNotEmpty) year.removeLast();
-                      year.insert(0, value);
+                      filter.year = value ?? filter.year;
                     },
                     initialSelection: yearList.firstOrNull,
                     width: MediaQuery.of(context).size.width * 0.27,
@@ -80,8 +73,7 @@ class FilterView extends StatelessWidget {
                   // month selector
                   DropdownMenu(
                     onSelected: (value) {
-                      if (month.isNotEmpty) month.removeLast();
-                      month.insert(0, value);
+                      filter.month = value;
                     },
                     width: MediaQuery.of(context).size.width * 0.26,
                     hintText: 'Mon',
@@ -100,8 +92,7 @@ class FilterView extends StatelessWidget {
                   // date selector
                   DropdownMenu(
                     onSelected: (value) {
-                      if (date.isNotEmpty) date.removeLast();
-                      date.insert(0, value);
+                      filter.date = value;
                     },
                     width: MediaQuery.of(context).size.width * 0.24,
                     hintText: 'Day',
@@ -123,32 +114,16 @@ class FilterView extends StatelessWidget {
               ListTile(
                 title: TextButton(
                     onPressed: () {
-                      if (catagory.isNotEmpty) catagory.removeLast();
-                      if (subcatagory.isNotEmpty) subcatagory.removeLast();
-                      if (date.isNotEmpty) date.removeLast();
-                      if (month.isNotEmpty) month.removeLast();
-                      if (year.isNotEmpty) year.removeLast();
-                      context
-                          .read<MainBloc>()
-                          .add(const MainEventFilterNode(null));
+                      filter.setNull();
+                      context.read<MainBloc>().add(MainEventFilterNode(filter));
 
                       Navigator.of(context).pop();
                     },
                     child: const Text('Clear')),
                 trailing: TextButton(
                     onPressed: () {
-                      if (year.firstOrNull != null) {
-                        final filter = FilterBy(
-                            year: year.first,
-                            month: month.firstOrNull,
-                            date: date.firstOrNull,
-                            catagory: catagory.firstOrNull,
-                            subcatagory: subcatagory.firstOrNull);
+                      context.read<MainBloc>().add(MainEventFilterNode(filter));
 
-                        context
-                            .read<MainBloc>()
-                            .add(MainEventFilterNode(filter));
-                      }
                       Navigator.of(context).pop();
                     },
                     child: const Text('Apply')),

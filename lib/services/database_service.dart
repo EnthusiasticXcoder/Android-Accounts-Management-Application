@@ -70,7 +70,6 @@ class DatabaseService {
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     await _userService.changeActiveuser(db: db, user: user);
-    
   }
 
   Future<void> updateUser(
@@ -89,12 +88,8 @@ class DatabaseService {
 
   // Nodes
   void filterNodes(FilterBy? filter) {
-    if (filter == null) {
-      _currentNode = _nodeService.allNodes;
-    } else {
-      final nodes = _nodeService.filterNodes(filter: filter);
-      _currentNode = nodes;
-    }
+    final nodes = _nodeService.filterNodes(filter: filter);
+    _currentNode = nodes;
   }
 
   Iterable<DatabaseNode> filterNodesByIncome(
